@@ -44,6 +44,10 @@ public class User {
 	@Setter
 	private String email;
 	
+	@Getter
+	@Setter
+	private String role;
+	
 	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Getter
 	@Setter
@@ -54,6 +58,7 @@ public class User {
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.email = builder.email;
+		this.role = builder.role;
 		this.courses = builder.courses;
 	}
 	
@@ -62,6 +67,7 @@ public class User {
 		private String firstName;
 		private String lastName;
 		private String email;
+		private String role;
 		private List<Course> courses;
 		
 		public Builder id(Long id){
@@ -81,6 +87,11 @@ public class User {
 		
 		public Builder email(String email) {
 			this.email = email;
+			return this;
+		}
+		
+		public Builder role(String role) {
+			this.role = role;
 			return this;
 		}
 		
