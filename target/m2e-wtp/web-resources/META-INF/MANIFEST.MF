@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: JavaDevOrganizer
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Kuba
+Implementation-Vendor-Id: com.javadev
+Build-Jdk: 1.8.0_151
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/JavaDevOrganizer
+Created-By: Maven Integration for Eclipse
+
