@@ -54,6 +54,7 @@ public class User {
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.email = builder.email;
+		this.courses = builder.courses;
 	}
 	
 	public static class Builder{
@@ -61,6 +62,7 @@ public class User {
 		private String firstName;
 		private String lastName;
 		private String email;
+		private List<Course> courses;
 		
 		public Builder id(Long id){
 			this.id = id;
@@ -79,6 +81,11 @@ public class User {
 		
 		public Builder email(String email) {
 			this.email = email;
+			return this;
+		}
+		
+		public Builder courses(List<Course> courses) {
+			this.courses = courses;
 			return this;
 		}
 		

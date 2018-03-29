@@ -52,6 +52,7 @@ public class Course {
 		this.name = builder.name;
 		this.description = builder.description;
 		this.date = builder.date;
+		this.users = builder.users;
 	}
 	
 	public static class Builder{
@@ -59,6 +60,7 @@ public class Course {
 		private String name;
 		private String description;
 		private Date date;
+		private List<User> users;
 		
 		public Builder id(Long id) {
 			this.id = id;
@@ -77,6 +79,11 @@ public class Course {
 		
 		public Builder date(Date date) {
 			this.date = date;
+			return this;
+		}
+		
+		public Builder users(List<User> users) {
+			this.users = users;
 			return this;
 		}
 		
