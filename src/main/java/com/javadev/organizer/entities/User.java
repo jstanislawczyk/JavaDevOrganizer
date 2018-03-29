@@ -1,7 +1,14 @@
 package com.javadev.organizer.entities;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
@@ -18,6 +25,7 @@ import lombok.ToString;
 public class User {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Getter
 	private Long id;
 	
@@ -36,6 +44,11 @@ public class User {
 	@Setter
 	private String email;
 	
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Getter
+	@Setter
+	private List<Course> courses;
+	
 	public User(final Builder builder){
 		this.id = builder.id;
 		this.firstName = builder.firstName;
@@ -49,22 +62,22 @@ public class User {
 		private String lastName;
 		private String email;
 		
-		public Builder id(final Long id){
+		public Builder id(Long id){
 			this.id = id;
 			return this;
 		}
 		
-		public Builder firstName(final String firstName) {
+		public Builder firstName(String firstName) {
 			this.firstName = firstName;
 			return this;
 		}
 		
-		public Builder lastName(final String lastName) {
+		public Builder lastName(String lastName) {
 			this.lastName = lastName;
 			return this;
 		}
 		
-		public Builder email(final String email) {
+		public Builder email(String email) {
 			this.email = email;
 			return this;
 		}
