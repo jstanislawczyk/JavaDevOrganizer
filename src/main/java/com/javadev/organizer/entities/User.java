@@ -44,6 +44,11 @@ public class User {
 	@Setter
 	private String email;
 	
+	@Size(min=2, max=50, message="Password must contain 6-50 characters")
+	@Getter
+	@Setter
+	private String password;
+	
 	@Getter
 	@Setter
 	private String role;
@@ -58,6 +63,7 @@ public class User {
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.email = builder.email;
+		this.password = builder.password;
 		this.role = builder.role;
 		this.courses = builder.courses;
 	}
@@ -67,6 +73,7 @@ public class User {
 		private String firstName;
 		private String lastName;
 		private String email;
+		private String password;
 		private String role;
 		private List<Course> courses;
 		
@@ -87,6 +94,11 @@ public class User {
 		
 		public Builder email(String email) {
 			this.email = email;
+			return this;
+		}
+		
+		public Builder password(String password) {
+			this.password = password;
 			return this;
 		}
 		
