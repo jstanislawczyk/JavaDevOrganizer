@@ -2,7 +2,6 @@ package com.javadev.organizer.entities;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -55,7 +54,7 @@ public class User {
 	@Setter
 	private String role;
 	
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	@JsonBackReference
 	@Getter
 	@Setter
