@@ -17,7 +17,7 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@GetMapping("/user/get_user_by_id/{id}")
+	@GetMapping("/user/show_user_by_id/{id}")
 	public HttpEntity<User> getUserById(@PathVariable Long id) {
 		
 		User user = userRepository.findById(id).orElse(null);

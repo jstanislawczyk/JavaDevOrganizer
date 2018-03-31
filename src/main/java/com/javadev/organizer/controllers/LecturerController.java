@@ -20,6 +20,7 @@ public class LecturerController {
 
 	@Autowired
 	private UserRepository userRepository;
+
 	
 	@GetMapping("/lecturer/find_all_students")
 	public List<User> getAllStudents() {
@@ -28,8 +29,7 @@ public class LecturerController {
 	
 	@PostMapping("/lecturer/create_student")
 	public void saveStudent(@RequestBody User student) {
-		student.setRole(Role.STUDENT.name());
-		
+		student.setRole(Role.STUDENT.name());	
 		userRepository.save(student);
 	}
 	
@@ -37,7 +37,24 @@ public class LecturerController {
 	public void updateStudent(
 			@RequestBody User updatedStudent, 
 			@PathVariable Long id) {
-		//todo	
+		
+		//need refactor, todo
+		
+		User student = userRepository.findById(id).orElse(null);
+		
+		if(updatedStudent.getFirstName()!= null && !updatedStudent.getFirstName().equals(student.getFirstName())) {
+			student.setFirstName(updatedStudent.getFirstName());
+		}
+		
+		if(updatedStudent.getLastName()!= null && !updatedStudent.getLastName().equals(student.getLastName())) {
+			student.setLastName(updatedStudent.getLastName());
+		}
+		
+		if(updatedStudent.getEmail()!= null && !updatedStudent.getEmail().equals(student.getEmail())) {
+			student.setEmail(updatedStudent.getEmail());
+		}
+		
+		userRepository.save(student);
 	}
 	
 	@DeleteMapping("/lecturer/remove_student/{id}")
