@@ -18,8 +18,14 @@ import com.javadev.organizer.repositories.UserRepository;
 @RestController
 public class LecturerController {
 
-	@Autowired
+	//private PasswordEncoder passwordEncoder;
 	private UserRepository userRepository;
+	
+	@Autowired
+	public LecturerController(UserRepository userRepository) {
+		this.userRepository = userRepository;
+		//this.passwordEncoder = passwordEncoder;
+	}
 
 	
 	@GetMapping("/lecturer/find_all_students")
@@ -29,7 +35,8 @@ public class LecturerController {
 	
 	@PostMapping("/lecturer/create_student")
 	public void saveStudent(@RequestBody User student) {
-		student.setRole(Role.STUDENT.name());	
+		setupStudent(student);	
+		
 		userRepository.save(student);
 	}
 	
@@ -60,5 +67,12 @@ public class LecturerController {
 	@DeleteMapping("/lecturer/remove_student/{id}")
 	public void deleteStudent(@PathVariable Long id) {
 		userRepository.deleteById(id);
+	}
+	
+	private User setupStudent(User student) {
+		student.setRole(Role.STUDENT.name());
+		//student.setPassword(passwordEncoder.encode(student.getPassword()));
+		
+		return student;
 	}
 }
