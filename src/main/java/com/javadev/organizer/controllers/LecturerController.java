@@ -3,6 +3,7 @@ package com.javadev.organizer.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,15 +19,14 @@ import com.javadev.organizer.repositories.UserRepository;
 @RestController
 public class LecturerController {
 
-	//private PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	private UserRepository userRepository;
 	
 	@Autowired
-	public LecturerController(UserRepository userRepository) {
+	public LecturerController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
-		//this.passwordEncoder = passwordEncoder;
+		this.passwordEncoder = passwordEncoder;
 	}
-
 	
 	@GetMapping("/lecturer/find_all_students")
 	public List<User> getAllStudents() {
@@ -71,7 +71,7 @@ public class LecturerController {
 	
 	private User setupStudent(User student) {
 		student.setRole(Role.STUDENT.name());
-		//student.setPassword(passwordEncoder.encode(student.getPassword()));
+		student.setPassword(passwordEncoder.encode(student.getPassword()));
 		
 		return student;
 	}

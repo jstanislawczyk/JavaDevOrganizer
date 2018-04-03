@@ -21,10 +21,16 @@ public class UserController {
 	public HttpEntity<User> getUserById(@PathVariable Long id) {
 		
 		User user = userRepository.findById(id).orElse(null);
+		
 		if(user != null) {
+			hideUserPassword(user);
 			return ResponseEntity.ok(user);
 		}
 		
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	private void hideUserPassword(User user) {
+		user.setPassword("---");
 	}
 }

@@ -35,7 +35,7 @@ public class User {
 	@Setter
 	private String firstName;
 	
-	@Size(min=2, max=60, message="Last name must contain 2-50 characters")
+	@Size(min=2, max=60, message="Last name must contain 2-60 characters")
 	@Getter
 	@Setter
 	private String lastName;
@@ -45,7 +45,7 @@ public class User {
 	@Setter
 	private String email;
 	
-	@Size(min=2, max=50, message="Password must contain 6-50 characters")
+	@Size(min=6, max=60, message="Password must contain 6-60 characters")
 	@Getter
 	@Setter
 	private String password;
