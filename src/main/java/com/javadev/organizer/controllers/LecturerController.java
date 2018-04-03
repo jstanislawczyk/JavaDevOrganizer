@@ -3,6 +3,10 @@ package com.javadev.organizer.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,11 +33,26 @@ public class LecturerController {
 	}
 	
 	@GetMapping("/lecturer/find_all_students")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public List<User> getAllStudents() {
 		return userRepository.findByRole(Role.STUDENT.name());
 	}
 	
+	@GetMapping("/lecturer/show_user_by_id/{id}")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
+	public HttpEntity<User> getUserById(@PathVariable Long id) {
+		
+		User user = userRepository.findById(id).orElse(null);
+		
+		if(user != null) {
+			return ResponseEntity.ok(user);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
 	@PostMapping("/lecturer/create_student")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void saveStudent(@RequestBody User student) {
 		setupStudent(student);	
 		
@@ -41,6 +60,7 @@ public class LecturerController {
 	}
 	
 	@PatchMapping("/lecturer/update_student/{id}")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateStudent(
 			@RequestBody User updatedStudent, 
 			@PathVariable Long id) {
@@ -65,6 +85,7 @@ public class LecturerController {
 	}
 	
 	@DeleteMapping("/lecturer/remove_student/{id}")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void deleteStudent(@PathVariable Long id) {
 		userRepository.deleteById(id);
 	}

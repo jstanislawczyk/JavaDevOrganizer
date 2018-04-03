@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,7 +26,8 @@ public class CourseController {
 	@Autowired
 	private CourseRepository courseRepository;
 	
-	@GetMapping("/user/get_course/{id}")
+	@GetMapping("/student/get_course/{id}")
+	@PreAuthorize("isAuthenticated()")
 	public HttpEntity<Course> getUserById(@PathVariable Long id) {
 		
 		Course course = courseRepository.findById(id).orElse(null);
@@ -36,7 +38,8 @@ public class CourseController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	@GetMapping("/user/show_all_courses")
+	@GetMapping("/student/show_all_courses")
+	@PreAuthorize("isAuthenticated()")
 	public List<Course> getAllCourses(){
 		List<Course> courses = new ArrayList<>();
 		courseRepository.findAll().forEach(courses::add);
@@ -45,11 +48,13 @@ public class CourseController {
 	}
 	
 	@PostMapping("/lecturer/create_course")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void saveCourse(@RequestBody Course course) {
 		courseRepository.save(course);
 	}
 	
 	@PatchMapping("/lecturer/update_course/{id}")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateCourse(
 			@RequestBody Course updatedCourse,
 			@PathVariable Long id){
@@ -74,6 +79,7 @@ public class CourseController {
 	}
 	
 	@DeleteMapping("/lecturer/remove_course/{id}")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public HttpEntity<Course> deleteCourse(@PathVariable Long id) {
 		Course course = courseRepository.findById(id).orElse(null);
 		Date currentDate = new Date(System.currentTimeMillis());
