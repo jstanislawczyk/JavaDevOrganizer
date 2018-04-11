@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{			
 		http
+			.cors()
+		.and()
 			.authorizeRequests()
 				.antMatchers("/student/**").hasAuthority("STUDENT")
 				.antMatchers("/lecturer/**").hasAnyAuthority("LECTURER","ADMIN")
