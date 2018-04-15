@@ -26,9 +26,9 @@ public class CourseController {
 	@Autowired
 	private CourseRepository courseRepository;
 	
-	@GetMapping("/student/get_course/{id}")
-	@PreAuthorize("isAuthenticated()")
-	public HttpEntity<Course> getUserById(@PathVariable Long id) {
+	@GetMapping("/course/get_course/{id}")
+	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
+	public HttpEntity<Course> getCourseById(@PathVariable Long id) {
 		
 		Course course = courseRepository.findById(id).orElse(null);
 		if(course != null) {
@@ -38,7 +38,7 @@ public class CourseController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	@GetMapping("/student/show_all_courses")
+	@GetMapping("/course/show_all_courses")
 	@PreAuthorize("isAuthenticated()")
 	public List<Course> getAllCourses(){
 		List<Course> courses = new ArrayList<>();
@@ -47,13 +47,13 @@ public class CourseController {
 		return courses;
 	}
 	
-	@PostMapping("/lecturer/create_course")
+	@PostMapping("/course/create_course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void saveCourse(@RequestBody Course course) {
 		courseRepository.save(course);
 	}
 	
-	@PatchMapping("/lecturer/update_course/{id}")
+	@PatchMapping("/course/update_course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateCourse(
 			@RequestBody Course updatedCourse,
@@ -78,7 +78,7 @@ public class CourseController {
 		courseRepository.save(course);
 	}
 	
-	@DeleteMapping("/lecturer/remove_course/{id}")
+	@DeleteMapping("/course/remove_course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public HttpEntity<Course> deleteCourse(@PathVariable Long id) {
 		Course course = courseRepository.findById(id).orElse(null);
