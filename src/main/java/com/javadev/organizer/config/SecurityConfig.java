@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.cors()
 		.and()
 			.authorizeRequests()
-				.antMatchers("/student/**").hasAuthority("STUDENT")
+				.antMatchers("/student/**").authenticated()
 				.antMatchers("/lecturer/**").hasAnyAuthority("LECTURER","ADMIN")
 				.antMatchers("/admin_control/**").hasAuthority("ADMIN")
 		.and()
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.authenticationEntryPoint(customAuthenticationEntryPoint)		
 		.and()
 			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 		.and()
 			.csrf().disable();
 	}

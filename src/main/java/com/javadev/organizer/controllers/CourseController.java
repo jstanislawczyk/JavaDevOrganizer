@@ -2,6 +2,7 @@ package com.javadev.organizer.controllers;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,20 @@ public class CourseController {
 		List<Course> courses = new ArrayList<>();
 		courseRepository.findAll().forEach(courses::add);
 		
+		Collections.sort(courses, (first, second) -> first.getId().intValue() - second.getId().intValue());
+		
 		return courses;
 	}
 	
 	@PostMapping("/course/create_course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public void saveCourse(@RequestBody Course course) {
-		courseRepository.save(course);
+	public HttpStatus saveCourse(@RequestBody Course course) {
+		if(courseRepository.count()<9) {
+			courseRepository.save(course);
+			return HttpStatus.OK;
+		}else {
+			return HttpStatus.CONFLICT;
+		}		
 	}
 	
 	@PatchMapping("/course/update_course/{id}")
