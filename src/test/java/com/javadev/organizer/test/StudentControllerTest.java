@@ -29,7 +29,7 @@ public class StudentControllerTest {
 	private UserRepository userRepository;
 	
 	@Before
-	public void setup() throws Exception{
+	public void setup(){
 		courseRepository = mock(CourseRepository.class);
 		userRepository = mock(UserRepository.class);
 		

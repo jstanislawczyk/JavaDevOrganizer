@@ -18,13 +18,13 @@ import com.javadev.organizer.repositories.UserRepository;
 public class AdminController {
 	
 	@Autowired
-	private UserRepository UserRepository;
+	private UserRepository userRepository;
 	
 	@GetMapping("/admin_control/find_all_users")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public HttpEntity<List<User>> getAllUsers(){
 		List<User> users = new ArrayList<>();
-		UserRepository.findAll().forEach(users::add);
+		userRepository.findAll().forEach(users::add);
 
 		if(users.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
