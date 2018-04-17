@@ -62,7 +62,7 @@ public class StudentController {
 		List<BigDecimal> courses = courseRepository.findCoursesIdsByUserId(id);
 		
 		if(courses.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
 			return ResponseEntity.ok(courses);
 		}

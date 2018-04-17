@@ -34,8 +34,14 @@ public class LecturerController {
 	
 	@GetMapping("/lecturer/find_all_students")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public List<User> getAllStudents() {
-		return userRepository.findByRole(Role.STUDENT.name());
+	public HttpEntity<List<User>> getAllStudents() {
+		List<User> users = userRepository.findByRole(Role.STUDENT.name());
+		
+		if(users.isEmpty()) {
+			return ResponseEntity.ok(users);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping("/lecturer/show_user_by_id/{id}")
@@ -46,9 +52,9 @@ public class LecturerController {
 		
 		if(user != null) {
 			return ResponseEntity.ok(user);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@PostMapping("/lecturer/create_student")
