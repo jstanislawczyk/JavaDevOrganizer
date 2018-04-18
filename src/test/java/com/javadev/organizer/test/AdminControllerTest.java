@@ -69,17 +69,8 @@ public class AdminControllerTest {
 	
 	private List<User> getExpectedUsers() {
 		List<User> expectedUsers = new ArrayList<>();
-		expectedUsers.add(
-				new User.Builder()
-				.id(1L)
-				.email("jkowalski@mail.com")
-				.build());
-		
-		expectedUsers.add(
-				new User.Builder()
-				.id(2L)
-				.email("anowak@mail.com")
-				.build());
+		expectedUsers.add(new User.Builder().id(1L).email("jkowalski@mail.com").build());	
+		expectedUsers.add(new User.Builder().id(2L).email("anowak@mail.com").build());
 		
 		return expectedUsers;
 	}

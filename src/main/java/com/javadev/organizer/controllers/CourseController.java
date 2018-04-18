@@ -53,7 +53,7 @@ public class CourseController {
 	@PostMapping("/course/create_course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public HttpStatus saveCourse(@RequestBody Course course) {
-		if(courseRepository.count()<9) {
+		if(courseRepository.count()<8) {;
 			courseRepository.save(course);
 			return HttpStatus.OK;
 		}else {

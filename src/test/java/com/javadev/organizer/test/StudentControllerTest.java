@@ -41,7 +41,7 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testIdList() throws Exception {
+	public void testCheckCoursesStatus() throws Exception {
 		List<BigDecimal> expectedCoursesIds = new ArrayList<>();
 		expectedCoursesIds.add(new BigDecimal(new BigInteger("1")));
 		expectedCoursesIds.add(new BigDecimal(new BigInteger("5")));
@@ -56,7 +56,7 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testEmptyIdList() throws Exception{
+	public void testEmptyCheckCoursesStatus() throws Exception{
 		when(courseRepository.findCoursesIdsByUserId(1L)).thenReturn(new ArrayList<>());
 		
 		mockMvc
