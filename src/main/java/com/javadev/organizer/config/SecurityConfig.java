@@ -47,8 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication().dataSource(dataSource)
-			.usersByUsernameQuery("SELECT email, password, true FROM user WHERE email=?")
-			.authoritiesByUsernameQuery("SELECT email, role FROM user WHERE email=?")
+			.usersByUsernameQuery("SELECT email, password, true FROM users WHERE email=?")
+			.authoritiesByUsernameQuery("SELECT email, role FROM users WHERE email=?")
 			.passwordEncoder(passwordEncoder());
     }
 	
