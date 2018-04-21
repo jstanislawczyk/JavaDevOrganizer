@@ -31,13 +31,9 @@ public class StudentControllerTest {
 	@Before
 	public void setup(){
 		courseRepository = mock(CourseRepository.class);
-		userRepository = mock(UserRepository.class);
-		
-		studentController = new StudentController(userRepository, courseRepository);
-		
-		mockMvc = MockMvcBuilders
-				.standaloneSetup(studentController)
-				.build();
+		userRepository = mock(UserRepository.class);	
+		studentController = new StudentController(userRepository, courseRepository);	
+		mockMvc = MockMvcBuilders.standaloneSetup(studentController).build();
 	}
 	
 	@Test
@@ -56,7 +52,7 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testEmptyCheckCoursesStatus() throws Exception{
+	public void testEmptyCheckCoursesStatus() throws Exception {
 		when(courseRepository.findCoursesIdsByUserId(1L)).thenReturn(new ArrayList<>());
 		
 		mockMvc

@@ -32,8 +32,7 @@ public class CourseControllerTest {
 	
 	@Before
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		    
+		MockitoAnnotations.initMocks(this);   
 		mockMvc = MockMvcBuilders.standaloneSetup(courseController).build();
 	}
 	
@@ -42,8 +41,7 @@ public class CourseControllerTest {
 		
 		ObjectMapper mapper = new ObjectMapper();	
 		Course unsavedCourse = new Course.Builder().name("Java").description("Spring")	.build();
-		Course savedCourse =  new Course.Builder().id(1L).name("Java").description("Spring").build();
-		
+		Course savedCourse =  new Course.Builder().id(1L).name("Java").description("Spring").build();	
 		String json = mapper.writeValueAsString(unsavedCourse);
 		
 		when(courseRepository.count()).thenReturn(4L);

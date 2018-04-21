@@ -41,31 +41,19 @@ public class LecturerControllerTest {
 	
 	@Test
 	public void testSaveStudent() throws Exception {
-		User unsavedUser = new User.Builder()
-				.email("test@mail.com")
-				.firstName("Jan")
-				.lastName("Kowalski")
-				.role(Role.STUDENT.name())
-				.build();
+		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
 		
-		User savedUser = new User.Builder()
-				.id(1L)
-				.email("test@mail.com")
-				.firstName("Jan")
-				.lastName("Kowalski")
-				.role(Role.STUDENT.name())
-				.build();
+		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(unsavedUser);
 		
 		when(userRepository.save(unsavedUser)).thenReturn(savedUser);
 		
-		mockMvc
-			.perform(post("/lecturer/create_student")
+		mockMvc.perform(post("/lecturer/create_student")
 					.contentType( MediaType.APPLICATION_JSON)
 					.content(json))
-			.andExpect(status().isOk());
+			   .andExpect(status().isOk());
 		
 		verify(userRepository, atLeastOnce()).save(unsavedUser);
 	}

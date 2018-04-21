@@ -36,7 +36,6 @@ public class AdminControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-
 		mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
 	}
 
@@ -46,8 +45,7 @@ public class AdminControllerTest {
 
 		when(userRepository.findAll()).thenReturn(expectedUsers);
 
-		mockMvc.perform(get("/admin_control/find_all_users"))
-				.andExpect(status().isOk())
+		mockMvc.perform(get("/admin_control/find_all_users")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[0].email", is("jkowalski@mail.com")))
 				.andExpect(jsonPath("$[1].id", is(2))).andExpect(jsonPath("$[1].email", is("anowak@mail.com")));
@@ -56,7 +54,6 @@ public class AdminControllerTest {
 	@Test
 	public void testGetEmptyUserList() throws Exception {
 		when(userRepository.findAll()).thenReturn(new ArrayList<>());
-
 		mockMvc.perform(get("/admin_control/find_all_users")).andExpect(status().isNotFound());
 	}
 
