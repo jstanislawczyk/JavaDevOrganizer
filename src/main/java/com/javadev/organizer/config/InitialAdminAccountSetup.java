@@ -11,10 +11,10 @@ import com.javadev.organizer.repositories.UserRepository;
 
 @Component
 public class InitialAdminAccountSetup {
-	
+
 	private PasswordEncoder passwordEncoder;
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	public InitialAdminAccountSetup(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
@@ -24,11 +24,12 @@ public class InitialAdminAccountSetup {
 	@EventListener(ApplicationReadyEvent.class)
 	public void createFirstAdminAccount() {
 
-		if(userRepository.findById(1L).orElse(null)==null) {
-			User admin = new User.Builder().firstName("admin").lastName("admin").email("admin@gmail.com").password("admin").role("ADMIN").build();
-			admin.setPassword(passwordEncoder.encode(admin.getPassword()));	
-			
+		if (userRepository.findById(1L).orElse(null) == null) {
+			User admin = new User.Builder().firstName("admin").lastName("admin").email("admin@gmail.com")
+					.password("admin").role("ADMIN").build();
+			admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+
 			userRepository.save(admin);
-		}	
+		}
 	}
 }

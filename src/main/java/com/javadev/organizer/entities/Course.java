@@ -88,7 +88,7 @@ public class Course {
 			this.users = users;
 			return this;
 		}
-		
+
 		public Course build() {
 			return new Course(this);
 		}

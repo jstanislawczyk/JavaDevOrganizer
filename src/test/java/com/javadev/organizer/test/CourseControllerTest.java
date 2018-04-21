@@ -40,18 +40,9 @@ public class CourseControllerTest {
 	@Test
 	public void testSaveCourse() throws Exception {
 		
-		ObjectMapper mapper = new ObjectMapper();
-		
-		Course unsavedCourse = new Course.Builder()
-				.name("Java")
-				.description("Spring")	
-				.build();
-		
-		Course savedCourse =  new Course.Builder()
-				.id(1L)
-				.name("Java")
-				.description("Spring")
-				.build();
+		ObjectMapper mapper = new ObjectMapper();	
+		Course unsavedCourse = new Course.Builder().name("Java").description("Spring")	.build();
+		Course savedCourse =  new Course.Builder().id(1L).name("Java").description("Spring").build();
 		
 		String json = mapper.writeValueAsString(unsavedCourse);
 		
@@ -60,9 +51,8 @@ public class CourseControllerTest {
 		
 		mockMvc
 			.perform(post("/course/create_course")
-					.contentType( MediaType.APPLICATION_JSON)
-					.content(json))
-			.andExpect(status().isOk());
+					.contentType( MediaType.APPLICATION_JSON).content(json))
+			.andExpect(status().isCreated());
 		
 		verify(courseRepository, atLeastOnce()).save(unsavedCourse);
 	}

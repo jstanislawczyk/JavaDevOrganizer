@@ -9,10 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.javadev.organizer.entities.Course;
 
-public interface CourseRepository extends CrudRepository<Course, Long>{
+public interface CourseRepository extends CrudRepository<Course, Long> {
 	
-	@Query(
-			value =   "SELECT id FROM course AS C "
+	@Query(value =   "SELECT id FROM course AS C "
 					+ "INNER JOIN course_users AS CU "
 					+ "ON C.id=CU.courses_id "
 					+ "WHERE users_id = :userId"
