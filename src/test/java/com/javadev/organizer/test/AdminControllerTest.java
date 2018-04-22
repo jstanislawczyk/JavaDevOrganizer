@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.javadev.organizer.controllers.AdminController;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.handlers.GlobalUserExceptionsHandler;
 import com.javadev.organizer.repositories.UserRepository;
 
 public class AdminControllerTest {
@@ -36,7 +37,7 @@ public class AdminControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(adminController).setControllerAdvice(new GlobalUserExceptionsHandler()).build();
 	}
 
 	@Test

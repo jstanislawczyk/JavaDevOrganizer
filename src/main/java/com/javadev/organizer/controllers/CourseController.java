@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +25,6 @@ import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.exceptions.CourseNotCreatedException;
 import com.javadev.organizer.exceptions.CourseNotFoundException;
 import com.javadev.organizer.exceptions.CoursesListNotFoundException;
-import com.javadev.organizer.exceptions.Error;
 import com.javadev.organizer.repositories.CourseRepository;
 
 @RestController
@@ -106,25 +104,6 @@ public class CourseController {
 		if (currentDate.before(course.getDate())) {
 			courseRepository.delete(course);
 		}
-	}
-
-	@ExceptionHandler(CoursesListNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public Error coursesListNotFound(CoursesListNotFoundException exception) {
-		return new Error(404, "Courses not found");
-	}
-
-	@ExceptionHandler(CourseNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public Error courseNotFound(CourseNotFoundException exception) {
-		long courseId = exception.getCourseId();
-		return new Error(404, "Course [id=" + courseId + "] not found");
-	}
-
-	@ExceptionHandler(CourseNotCreatedException.class)
-	@ResponseStatus(HttpStatus.CONFLICT)
-	public Error courseNotCreated(CourseNotCreatedException exception) {
-		return new Error(409, "Course not created. Can't create more than 8 courses");
 	}
 
 	private HttpHeaders buildLocationHeader(String value, UriComponentsBuilder uriComponentsBuilder) {

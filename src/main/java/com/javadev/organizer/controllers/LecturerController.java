@@ -1,26 +1,27 @@
 package com.javadev.organizer.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
-import com.javadev.organizer.exceptions.Error;
-import com.javadev.organizer.exceptions.UsersListNotFoundException;
 import com.javadev.organizer.exceptions.UserNotFoundException;
+import com.javadev.organizer.exceptions.UsersListNotFoundException;
 import com.javadev.organizer.repositories.UserRepository;
 
 @RestController
@@ -57,10 +58,14 @@ public class LecturerController {
 
 	@PostMapping("/lecturer/create_student")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public void saveStudent(@RequestBody User student) {
+	public ResponseEntity<User> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) {
 		setupStudent(student);
-
 		userRepository.save(student);
+		
+		HttpHeaders headers = buildLocationHeader(String.valueOf(student.getId()), uriComponentsBuilder);
+		ResponseEntity<User> responseEntity = new ResponseEntity<>(student, headers, HttpStatus.CREATED);
+		
+		return responseEntity;	
 	}
 
 	@PatchMapping("/lecturer/update_student/{id}")
@@ -92,23 +97,23 @@ public class LecturerController {
 		userRepository.deleteById(id);
 	}
 
-	@ExceptionHandler(UserNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public Error userNotFound(UserNotFoundException exception) {
-		long userId = exception.getUserId();
-		return new Error(404, "User [id=" + userId + "] not found");
-	}
-	
-	@ExceptionHandler(UsersListNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public Error usersNotFound(UsersListNotFoundException exception) {
-		return new Error(404, "Users not found");
-	}
-
 	private User setupStudent(User student) {
 		student.setRole(Role.STUDENT.name());
 		student.setPassword(passwordEncoder.encode(student.getPassword()));
 
 		return student;
+	}
+	
+	private HttpHeaders buildLocationHeader(String value, UriComponentsBuilder uriComponentsBuilder) {
+		HttpHeaders header = new HttpHeaders();
+		URI locationUri = buildUri("/lecturer/show_user_by_id/", value, uriComponentsBuilder);
+		header.setLocation(locationUri);
+
+		return header;
+	}
+
+	private URI buildUri(String path, String value, UriComponentsBuilder uriComponentsBuilder) {
+		URI locationUri = uriComponentsBuilder.path(path).path(value).build().toUri();
+		return locationUri;
 	}
 }

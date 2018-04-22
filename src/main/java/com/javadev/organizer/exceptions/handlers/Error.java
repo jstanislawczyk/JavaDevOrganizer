@@ -1,4 +1,4 @@
-package com.javadev.organizer.exceptions;
+package com.javadev.organizer.exceptions.handlers;
 
 public class Error {
 

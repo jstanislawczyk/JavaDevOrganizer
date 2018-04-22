@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javadev.organizer.controllers.CourseController;
 import com.javadev.organizer.entities.Course;
+import com.javadev.organizer.exceptions.handlers.GlobalCourseExceptionsHandler;
 import com.javadev.organizer.repositories.CourseRepository;
 
 public class CourseControllerTest {
@@ -33,7 +34,7 @@ public class CourseControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);   
-		mockMvc = MockMvcBuilders.standaloneSetup(courseController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(courseController).setControllerAdvice(new GlobalCourseExceptionsHandler()).build();
 	}
 	
 	@Test

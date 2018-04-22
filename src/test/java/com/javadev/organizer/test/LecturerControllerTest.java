@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javadev.organizer.controllers.LecturerController;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.handlers.GlobalUserExceptionsHandler;
 import com.javadev.organizer.repositories.UserRepository;
 
 public class LecturerControllerTest {
@@ -36,7 +37,7 @@ public class LecturerControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(lecturerController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(lecturerController).setControllerAdvice(new GlobalUserExceptionsHandler()).build();
 	}
 	
 	@Test
@@ -53,7 +54,7 @@ public class LecturerControllerTest {
 		mockMvc.perform(post("/lecturer/create_student")
 					.contentType( MediaType.APPLICATION_JSON)
 					.content(json))
-			   .andExpect(status().isOk());
+			   .andExpect(status().isCreated());
 		
 		verify(userRepository, atLeastOnce()).save(unsavedUser);
 	}
