@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.PresenceNotSavedException;
 import com.javadev.organizer.repositories.CourseRepository;
 import com.javadev.organizer.repositories.UserRepository;
 
@@ -34,7 +35,7 @@ public class StudentController {
 
 	@PostMapping("/student/registerPresence")
 	@PreAuthorize("isAuthenticated()")
-	public HttpStatus registerUserPresence(
+	public void registerUserPresence(
 			@RequestParam(value = "courseId", required = true) Long courseId,
 			@RequestParam(value = "userId", required = true) Long userId) {
 
@@ -45,12 +46,11 @@ public class StudentController {
 
 			if (isPresenceNotRegistered(user, course) && isRegisteredAfterCourse(course)) {
 				savePresence(user, course);
-				return HttpStatus.OK;
 			} else {
-				return HttpStatus.NO_CONTENT;
+				throw new PresenceNotSavedException();
 			}
 		} else {
-			return HttpStatus.NO_CONTENT;
+			throw new PresenceNotSavedException();
 		}
 	}
 

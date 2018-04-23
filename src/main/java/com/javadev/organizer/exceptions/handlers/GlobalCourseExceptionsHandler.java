@@ -14,7 +14,7 @@ public class GlobalCourseExceptionsHandler {
 
 	@ExceptionHandler(CoursesListNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public Error coursesListNotFound(CoursesListNotFoundException exception) {
+	public Error coursesListNotFound() {
 		return new Error(404, "Courses not found");
 	}
 
@@ -27,7 +27,7 @@ public class GlobalCourseExceptionsHandler {
 
 	@ExceptionHandler(CourseNotCreatedException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
-	public Error courseNotCreated(CourseNotCreatedException exception) {
+	public Error courseNotCreated() {
 		return new Error(409, "Course not created. Can't create more than 8 courses");
 	}
 }

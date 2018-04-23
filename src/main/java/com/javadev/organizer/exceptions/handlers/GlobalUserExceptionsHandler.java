@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.javadev.organizer.exceptions.PresenceNotSavedException;
 import com.javadev.organizer.exceptions.UserNotFoundException;
 import com.javadev.organizer.exceptions.UsersListNotFoundException;
 
@@ -20,7 +21,13 @@ public class GlobalUserExceptionsHandler {
 
 	@ExceptionHandler(UsersListNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public Error usersListNotFoundExceptionHandler(UsersListNotFoundException exception) {
+	public Error usersListNotFoundExceptionHandler() {
 		return new Error(404, "Users not found");
+	}
+	
+	@ExceptionHandler(PresenceNotSavedException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public Error presenceNotSavedExceptionHandler() {
+		return new Error(404, "Presence not saved");
 	}
 }
