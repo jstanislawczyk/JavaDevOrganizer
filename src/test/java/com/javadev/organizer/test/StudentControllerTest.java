@@ -38,7 +38,7 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testCheckCoursesStatus() throws Exception {
+	public void shouldReturnCoursesIds() throws Exception {
 		List<BigDecimal> expectedCoursesIds = new ArrayList<>();
 		expectedCoursesIds.add(new BigDecimal(new BigInteger("1")));
 		expectedCoursesIds.add(new BigDecimal(new BigInteger("5")));
@@ -53,7 +53,7 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testEmptyCheckCoursesStatus() throws Exception {
+	public void shouldReturnCoursesIdsNotFound() throws Exception {
 		when(courseRepository.findCoursesIdsByUserId(1L)).thenReturn(new ArrayList<>());
 		
 		mockMvc

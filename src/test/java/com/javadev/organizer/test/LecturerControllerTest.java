@@ -41,7 +41,7 @@ public class LecturerControllerTest {
 	}
 	
 	@Test
-	public void testSaveStudent() throws Exception {
+	public void shouldSaveStudent() throws Exception {
 		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
 		
 		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();

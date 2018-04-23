@@ -41,7 +41,7 @@ public class AdminControllerTest {
 	}
 
 	@Test
-	public void testGetUserList() throws Exception {
+	public void shouldReturnUserList() throws Exception {
 		List<User> expectedUsers = getExpectedUsers();
 
 		when(userRepository.findAll()).thenReturn(expectedUsers);
@@ -53,7 +53,7 @@ public class AdminControllerTest {
 	}
 
 	@Test
-	public void testGetEmptyUserList() throws Exception {
+	public void shouldReturnUserListNotFound() throws Exception {
 		when(userRepository.findAll()).thenReturn(new ArrayList<>());
 		mockMvc.perform(get("/admin_control/find_all_users")).andExpect(status().isNotFound());
 	}

@@ -38,7 +38,7 @@ public class CourseControllerTest {
 	}
 	
 	@Test
-	public void testSaveCourse() throws Exception {
+	public void shouldSaveCourse() throws Exception {
 		
 		ObjectMapper mapper = new ObjectMapper();	
 		Course unsavedCourse = new Course.Builder().name("Java").description("Spring")	.build();
