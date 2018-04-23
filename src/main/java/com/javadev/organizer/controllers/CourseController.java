@@ -33,7 +33,7 @@ public class CourseController {
 	@Autowired
 	private CourseRepository courseRepository;
 
-	@GetMapping("/course/get_course/{id}")
+	@GetMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public Course getCourseById(@PathVariable Long id) {
 		Course course = courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
@@ -41,7 +41,7 @@ public class CourseController {
 		return course;
 	}
 
-	@GetMapping("/course/show_all_courses")
+	@GetMapping("/courses")
 	@PreAuthorize("isAuthenticated()")
 	public List<Course> getAllCourses() {
 		List<Course> courses = new ArrayList<>();
@@ -55,7 +55,7 @@ public class CourseController {
 		return courses;
 	}
 
-	@PostMapping("/course/create_course")
+	@PostMapping("/course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public ResponseEntity<Course> saveCourse(@RequestBody Course course, UriComponentsBuilder uriComponentsBuilder) {
 
@@ -70,7 +70,7 @@ public class CourseController {
 		}
 	}
 
-	@PatchMapping("/course/update_course/{id}")
+	@PatchMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	@ResponseStatus(value = HttpStatus.OK, reason = "Course updated successfully")
 	public void updateCourse(@RequestBody Course updatedCourse, @PathVariable Long id) {
@@ -94,7 +94,7 @@ public class CourseController {
 		courseRepository.save(course);
 	}
 
-	@DeleteMapping("/course/remove_course/{id}")
+	@DeleteMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Course deleted successfully")
 	public void deleteCourse(@PathVariable Long id) {
@@ -108,7 +108,7 @@ public class CourseController {
 
 	private HttpHeaders buildLocationHeader(String value, UriComponentsBuilder uriComponentsBuilder) {
 		HttpHeaders header = new HttpHeaders();
-		URI locationUri = buildUri("/course/get_course/", value, uriComponentsBuilder);
+		URI locationUri = buildUri("/course/", value, uriComponentsBuilder);
 		header.setLocation(locationUri);
 
 		return header;

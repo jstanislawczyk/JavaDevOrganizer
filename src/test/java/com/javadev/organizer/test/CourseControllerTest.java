@@ -49,7 +49,7 @@ public class CourseControllerTest {
 		when(courseRepository.save(unsavedCourse)).thenReturn(savedCourse);
 		
 		mockMvc
-			.perform(post("/course/create_course")
+			.perform(post("/course")
 					.contentType( MediaType.APPLICATION_JSON).content(json))
 			.andExpect(status().isCreated());
 		
