@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 				.antMatchers("/student/**").authenticated()
 				.antMatchers("/lecturer/**").hasAnyAuthority("LECTURER","ADMIN")
-				.antMatchers("/admin_control/**").hasAuthority("ADMIN")
+				.antMatchers("/admin/**").hasAuthority("ADMIN")
 		.and()
 			.httpBasic()
 			.authenticationEntryPoint(customAuthenticationEntryPoint)		

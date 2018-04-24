@@ -34,7 +34,7 @@ public class AdminController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@GetMapping("/admin_control/find_all_users")
+	@GetMapping("/admin/users")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<User> getAllUsers() {
 		List<User> users = new ArrayList<>();
@@ -47,7 +47,7 @@ public class AdminController {
 		return users;
 	}
 
-	@PostMapping("/admin_control/create_user")
+	@PostMapping("/admin/user")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<User> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) {
 		setupUser(user);

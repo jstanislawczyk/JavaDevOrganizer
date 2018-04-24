@@ -51,7 +51,7 @@ public class LecturerControllerTest {
 		
 		when(userRepository.save(unsavedUser)).thenReturn(savedUser);
 		
-		mockMvc.perform(post("/lecturer/create_student")
+		mockMvc.perform(post("/lecturer/user/student")
 					.contentType( MediaType.APPLICATION_JSON)
 					.content(json))
 			   .andExpect(status().isCreated());

@@ -23,7 +23,7 @@ public class TemporaryClassForUserAuth {
 	@Autowired
 	private UserRepository userRepository;
 
-	@PostMapping("/auth/checkUserData")
+	@PostMapping("/auth/user/data/check")
 	@PreAuthorize("isAuthenticated()")
 	public HttpEntity<User> getUserIfExists(@RequestBody User user) {
 		User authenticatedUser = userRepository.findByEmail(user.getEmail()).orElse(null);

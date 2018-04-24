@@ -47,7 +47,7 @@ public class StudentControllerTest {
 		when(courseRepository.findCoursesIdsByUserId(1L)).thenReturn(expectedCoursesIds);
 		
 		mockMvc
-			.perform(get("/student/checkCoursesStatus/{id}", 1L))
+			.perform(get("/student/{id}/courses/ids", 1L))
 			.andExpect(status().isOk())
 		    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 	}

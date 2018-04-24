@@ -33,7 +33,7 @@ public class StudentController {
 		this.courseRepository = courseRepository;
 	}
 
-	@PostMapping("/student/registerPresence")
+	@PostMapping("/student/register-presence")
 	@PreAuthorize("isAuthenticated()")
 	public void registerUserPresence(
 			@RequestParam(value = "courseId", required = true) Long courseId,
@@ -54,7 +54,7 @@ public class StudentController {
 		}
 	}
 
-	@GetMapping("/student/checkCoursesStatus/{id}")
+	@GetMapping("/student/{id}/courses/ids")
 	@PreAuthorize("isAuthenticated()")
 	public HttpEntity<List<BigDecimal>> getCoursesIdsByUser(@PathVariable Long id) {
 

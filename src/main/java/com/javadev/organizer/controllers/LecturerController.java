@@ -36,7 +36,7 @@ public class LecturerController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@GetMapping("/lecturer/find_all_students")
+	@GetMapping("/lecturer/users/students")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public List<User> getAllStudents() {
 		List<User> users = userRepository.findByRole(Role.STUDENT.name());
@@ -48,7 +48,7 @@ public class LecturerController {
 		return users;
 	}
 
-	@GetMapping("/lecturer/show_user_by_id/{id}")
+	@GetMapping("/lecturer/user/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public User getUserById(@PathVariable Long id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -56,7 +56,7 @@ public class LecturerController {
 		return user;
 	}
 
-	@PostMapping("/lecturer/create_student")
+	@PostMapping("/lecturer/user/student")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public ResponseEntity<User> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) {
 		setupStudent(student);
@@ -68,7 +68,7 @@ public class LecturerController {
 		return responseEntity;	
 	}
 
-	@PatchMapping("/lecturer/update_student/{id}")
+	@PatchMapping("/lecturer/user/student/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateStudent(@RequestBody User updatedStudent, @PathVariable Long id) {
 
@@ -91,7 +91,7 @@ public class LecturerController {
 		userRepository.save(student);
 	}
 
-	@DeleteMapping("/lecturer/remove_student/{id}")
+	@DeleteMapping("/lecturer/user/student/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void deleteStudent(@PathVariable Long id) {
 		userRepository.deleteById(id);
