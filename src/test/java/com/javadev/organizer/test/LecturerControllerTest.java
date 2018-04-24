@@ -31,6 +31,7 @@ public class LecturerControllerTest {
 	private UserRepository userRepository;
 	@Mock
 	private PasswordEncoder passwordEncoder;
+	
 	@InjectMocks
 	private LecturerController lecturerController;
 	
@@ -41,14 +42,14 @@ public class LecturerControllerTest {
 	}
 	
 	@Test
-	public void shouldSaveStudent() throws Exception {
+	public void shouldSaveStudentWithUniqueEmail() throws Exception {
 		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
-		
 		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(unsavedUser);
 		
+		when(userRepository.countByEmail("test@mail.com")).thenReturn(0L);
 		when(userRepository.save(unsavedUser)).thenReturn(savedUser);
 		
 		mockMvc.perform(post("/lecturer/user/student")
@@ -57,5 +58,23 @@ public class LecturerControllerTest {
 			   .andExpect(status().isCreated());
 		
 		verify(userRepository, atLeastOnce()).save(unsavedUser);
+	}
+	
+	@Test
+	public void shouldNotSaveStudentWithNotUniqueEmail() throws Exception {
+		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
+		
+		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(unsavedUser);
+		
+		when(userRepository.countByEmail("test@mail.com")).thenReturn(1L);
+		when(userRepository.save(unsavedUser)).thenReturn(savedUser);
+		
+		mockMvc.perform(post("/lecturer/user/student")
+					.contentType( MediaType.APPLICATION_JSON)
+					.content(json))
+			   .andExpect(status().isConflict());
 	}
 }

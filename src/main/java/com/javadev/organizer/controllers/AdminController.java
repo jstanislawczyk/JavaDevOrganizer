@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.EmailNotUniqueException;
 import com.javadev.organizer.exceptions.UsersListNotFoundException;
 import com.javadev.organizer.repositories.UserRepository;
 
@@ -51,12 +52,17 @@ public class AdminController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<User> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) {
 		setupUser(user);
-		userRepository.save(user);
-		
-		HttpHeaders headers = buildLocationHeader(String.valueOf(user.getId()), uriComponentsBuilder);
-		ResponseEntity<User> responseEntity = new ResponseEntity<>(user, headers, HttpStatus.CREATED);
-		
-		return responseEntity;	
+
+		if (isEmailUnique(user.getEmail())) {
+			userRepository.save(user);
+
+			HttpHeaders headers = buildLocationHeader(String.valueOf(user.getId()), uriComponentsBuilder);
+			ResponseEntity<User> responseEntity = new ResponseEntity<>(user, headers, HttpStatus.CREATED);
+
+			return responseEntity;
+		} else {
+			throw new EmailNotUniqueException();
+		}
 	}
 
 	private void setupUser(User user) {
@@ -70,7 +76,11 @@ public class AdminController {
 			user.setRole(Role.STUDENT.name());
 		}
 	}
-	
+
+	private boolean isEmailUnique(String email) {
+		return (userRepository.countByEmail(email) == 0) ? true : false;
+	}
+
 	private HttpHeaders buildLocationHeader(String value, UriComponentsBuilder uriComponentsBuilder) {
 		HttpHeaders header = new HttpHeaders();
 		URI locationUri = buildUri("/lecturer/show_user_by_id/", value, uriComponentsBuilder);

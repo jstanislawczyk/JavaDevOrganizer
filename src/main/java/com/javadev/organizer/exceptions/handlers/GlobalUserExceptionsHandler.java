@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.javadev.organizer.exceptions.EmailNotUniqueException;
 import com.javadev.organizer.exceptions.PresenceNotSavedException;
 import com.javadev.organizer.exceptions.UserNotFoundException;
 import com.javadev.organizer.exceptions.UsersListNotFoundException;
@@ -29,5 +30,11 @@ public class GlobalUserExceptionsHandler {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Error presenceNotSavedExceptionHandler() {
 		return new Error(404, "Presence not saved");
+	}
+	
+	@ExceptionHandler(EmailNotUniqueException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public Error emailNotUniqueExceptionHandler() {
+		return new Error(404, "Email not unique");
 	}
 }

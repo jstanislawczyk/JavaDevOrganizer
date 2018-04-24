@@ -1,8 +1,11 @@
 package com.javadev.organizer.test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,10 +19,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javadev.organizer.controllers.AdminController;
+import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.handlers.GlobalUserExceptionsHandler;
 import com.javadev.organizer.repositories.UserRepository;
@@ -30,6 +36,8 @@ public class AdminControllerTest {
 
 	@Mock
 	private UserRepository userRepository;
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
 	@InjectMocks
 	private AdminController adminController;
@@ -56,6 +64,42 @@ public class AdminControllerTest {
 	public void shouldReturnUserListNotFound() throws Exception {
 		when(userRepository.findAll()).thenReturn(new ArrayList<>());
 		mockMvc.perform(get("/admin/users")).andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void shouldSaveUserWithUniqueEmail() throws Exception {
+		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER.name()).build();
+		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER.name()).build();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(unsavedUser);
+		
+		when(userRepository.countByEmail("test@mail.com")).thenReturn(0L);
+		when(userRepository.save(unsavedUser)).thenReturn(savedUser);	
+		
+		mockMvc.perform(post("/admin/user")
+					.contentType( MediaType.APPLICATION_JSON)
+					.content(json))
+			   .andExpect(status().isCreated());
+		
+		verify(userRepository, atLeastOnce()).save(unsavedUser);
+	}
+	
+	@Test
+	public void shouldNotSaveUserWithNotUniqueEmail() throws Exception {
+		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER.name()).build();
+		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER.name()).build();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(unsavedUser);
+		
+		when(userRepository.countByEmail("test@mail.com")).thenReturn(1L);
+		when(userRepository.save(unsavedUser)).thenReturn(savedUser);	
+		
+		mockMvc.perform(post("/admin/user")
+					.contentType( MediaType.APPLICATION_JSON)
+					.content(json))
+			   .andExpect(status().isConflict());
 	}
 
 	private List<User> getExpectedUsers() {

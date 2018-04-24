@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.EmailNotUniqueException;
 import com.javadev.organizer.exceptions.UserNotFoundException;
 import com.javadev.organizer.exceptions.UsersListNotFoundException;
 import com.javadev.organizer.repositories.UserRepository;
@@ -43,8 +44,8 @@ public class LecturerController {
 
 		if (users.isEmpty()) {
 			throw new UsersListNotFoundException();
-		} 
-		
+		}
+
 		return users;
 	}
 
@@ -52,7 +53,7 @@ public class LecturerController {
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public User getUserById(@PathVariable Long id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-		
+
 		return user;
 	}
 
@@ -60,12 +61,16 @@ public class LecturerController {
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public ResponseEntity<User> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) {
 		setupStudent(student);
-		userRepository.save(student);
-		
-		HttpHeaders headers = buildLocationHeader(String.valueOf(student.getId()), uriComponentsBuilder);
-		ResponseEntity<User> responseEntity = new ResponseEntity<>(student, headers, HttpStatus.CREATED);
-		
-		return responseEntity;	
+
+		if (isEmailUnique(student.getEmail())) {
+			userRepository.save(student);
+			HttpHeaders headers = buildLocationHeader(String.valueOf(student.getId()), uriComponentsBuilder);
+			ResponseEntity<User> responseEntity = new ResponseEntity<>(student, headers, HttpStatus.CREATED);
+
+			return responseEntity;
+		} else {
+			throw new EmailNotUniqueException();
+		}
 	}
 
 	@PatchMapping("/lecturer/user/student/{id}")
@@ -84,7 +89,7 @@ public class LecturerController {
 			student.setLastName(updatedStudent.getLastName());
 		}
 
-		if (updatedStudent.getEmail() != null && !updatedStudent.getEmail().equals(student.getEmail())) {
+		if (isEmailUnique(updatedStudent.getEmail()) && updatedStudent.getEmail() != null && !updatedStudent.getEmail().equals(student.getEmail())) {
 			student.setEmail(updatedStudent.getEmail());
 		}
 
@@ -103,7 +108,11 @@ public class LecturerController {
 
 		return student;
 	}
-	
+
+	private boolean isEmailUnique(String email) {
+		return (userRepository.countByEmail(email) == 0) ? true : false;
+	}
+
 	private HttpHeaders buildLocationHeader(String value, UriComponentsBuilder uriComponentsBuilder) {
 		HttpHeaders header = new HttpHeaders();
 		URI locationUri = buildUri("/lecturer/show_user_by_id/", value, uriComponentsBuilder);
