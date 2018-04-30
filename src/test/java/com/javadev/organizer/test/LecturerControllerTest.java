@@ -1,10 +1,15 @@
 package com.javadev.organizer.test;
 
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +25,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javadev.organizer.controllers.LecturerController;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.UserNotFoundException;
 import com.javadev.organizer.exceptions.handlers.GlobalUserExceptionsHandler;
 import com.javadev.organizer.repositories.UserRepository;
+import com.javadev.organizer.services.LecturerService;
 
 public class LecturerControllerTest {
 	
@@ -29,8 +36,12 @@ public class LecturerControllerTest {
 	
 	@Mock
 	private UserRepository userRepository;
+	
 	@Mock
 	private PasswordEncoder passwordEncoder;
+	
+	@Mock
+	private LecturerService lecturerService;
 	
 	@InjectMocks
 	private LecturerController lecturerController;
@@ -39,6 +50,33 @@ public class LecturerControllerTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(lecturerController).setControllerAdvice(new GlobalUserExceptionsHandler()).build();
+	}
+	
+	@Test
+	public void shouldFindUserById() throws Exception {
+		User expectedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
+		when(lecturerService.getUserById(1L)).thenReturn(expectedUser);
+		
+		mockMvc.perform(get("/lecturer/user/1")).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void shouldNotFindUserById() throws Exception {
+		when(lecturerService.getUserById(1L)).thenThrow(new UserNotFoundException(1L));
+		
+		mockMvc.perform(get("/lecturer/user/1")).andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void shouldReturnStudentList() throws Exception {
+		List<User> expectedStudents = getExpectedUsers();
+
+		when(lecturerService.getAllStudents()).thenReturn(expectedStudents);
+
+		mockMvc.perform(get("/lecturer/users/students")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[0].email", is("jkowalski@mail.com"))).andExpect(jsonPath("$[0].role", is("STUDENT")))
+				.andExpect(jsonPath("$[1].id", is(2))).andExpect(jsonPath("$[1].email", is("anowak@mail.com"))).andExpect(jsonPath("$[0].role", is("STUDENT")));
 	}
 	
 	@Test
@@ -55,26 +93,14 @@ public class LecturerControllerTest {
 		mockMvc.perform(post("/lecturer/user/student")
 					.contentType( MediaType.APPLICATION_JSON)
 					.content(json))
-			   .andExpect(status().isCreated());
-		
-		verify(userRepository, atLeastOnce()).save(unsavedUser);
+			   .andExpect(status().isOk());
 	}
 	
-	@Test
-	public void shouldNotSaveStudentWithNotUniqueEmail() throws Exception {
-		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
-		
-		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(unsavedUser);
-		
-		when(userRepository.countByEmail("test@mail.com")).thenReturn(1L);
-		when(userRepository.save(unsavedUser)).thenReturn(savedUser);
-		
-		mockMvc.perform(post("/lecturer/user/student")
-					.contentType( MediaType.APPLICATION_JSON)
-					.content(json))
-			   .andExpect(status().isConflict());
+	private List<User> getExpectedUsers() {
+		List<User> expectedUsers = new ArrayList<>();
+		expectedUsers.add(new User.Builder().id(1L).email("jkowalski@mail.com").role(Role.STUDENT.name()).build());
+		expectedUsers.add(new User.Builder().id(2L).email("anowak@mail.com").role(Role.STUDENT.name()).build());
+
+		return expectedUsers;
 	}
 }
