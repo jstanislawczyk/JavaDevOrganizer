@@ -81,9 +81,7 @@ public class AdminControllerTest {
 		when(userRepository.countByEmail("test@mail.com")).thenReturn(0L);
 		when(userRepository.save(unsavedUser)).thenReturn(savedUser);	
 		
-		mockMvc.perform(post("/admin/user")
-					.contentType( MediaType.APPLICATION_JSON)
-					.content(json))
+		mockMvc.perform(post("/admin/user").contentType( MediaType.APPLICATION_JSON).content(json))
 			   .andExpect(status().isOk());
 	}
 

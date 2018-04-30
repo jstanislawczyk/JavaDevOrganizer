@@ -58,18 +58,15 @@ public class StudentControllerTest {
 		
 		when(studentService.getCoursesIdsByUser(1L)).thenReturn(ResponseEntity.ok(expectedCoursesIds));
 		
-		mockMvc
-			.perform(get("/student/{id}/courses/ids", 1L))
-			.andExpect(status().isOk())
-		    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
+		mockMvc.perform(get("/student/{id}/courses/ids", 1L))
+			   .andExpect(status().isOk())
+			   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 	}
 	
 	@Test
 	public void shouldReturnCoursesIdsNotFound() throws Exception {
 		when(studentService.getCoursesIdsByUser(1L)).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		
-		mockMvc
-			.perform(get("/student/checkCoursesStatus/{id}", 1L))
-			.andExpect(status().isNotFound());
+		mockMvc.perform(get("/student/checkCoursesStatus/{id}", 1L)).andExpect(status().isNotFound());
 	}
 }

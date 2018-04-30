@@ -56,9 +56,8 @@ public class CourseControllerTest {
 		when(courseRepository.count()).thenReturn(4L);
 		when(courseRepository.save(unsavedCourse)).thenReturn(savedCourse);
 		
-		mockMvc
-			.perform(post("/course").contentType( MediaType.APPLICATION_JSON).content(json))
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(post("/course").contentType( MediaType.APPLICATION_JSON).content(json))
+			   .andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
@@ -66,32 +65,28 @@ public class CourseControllerTest {
 		Course expectedCourse = new Course.Builder().id(1L).name("Java").description("Spring").build();
 		when(courseService.getCourseById(1L)).thenReturn(expectedCourse);
 		
-		mockMvc.perform(get("/course/1"))
-			.andExpect(status().isOk());
+		mockMvc.perform(get("/course/1")).andExpect(status().isOk());
 	}
 	
 	@Test
 	public void shouldNotFindCourseById() throws Exception {
 		when(courseService.getCourseById(1L)).thenThrow(CourseNotFoundException.class);
 		
-		mockMvc.perform(get("/course/1"))
-			.andExpect(status().isNotFound());
+		mockMvc.perform(get("/course/1")).andExpect(status().isNotFound());
 	}
 	
 	@Test
 	public void shouldFindAllCoursesList() throws Exception {
 		when(courseService.getAllCourses()).thenReturn(expectedCourses());
 		
-		mockMvc.perform(get("/courses"))
-			.andExpect(status().isOk());
+		mockMvc.perform(get("/courses")).andExpect(status().isOk());
 	}
 	
 	@Test
 	public void shouldFindEmptyCoursesList() throws Exception {
 		when(courseService.getAllCourses().isEmpty()).thenThrow(CoursesListNotFoundException.class);
 		
-		mockMvc.perform(get("/courses"))
-			.andExpect(status().isNotFound());
+		mockMvc.perform(get("/courses")).andExpect(status().isNotFound());
 	}
 	
 	private List<Course> expectedCourses(){

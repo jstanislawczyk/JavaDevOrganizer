@@ -90,9 +90,7 @@ public class LecturerControllerTest {
 		when(userRepository.countByEmail("test@mail.com")).thenReturn(0L);
 		when(userRepository.save(unsavedUser)).thenReturn(savedUser);
 		
-		mockMvc.perform(post("/lecturer/user/student")
-					.contentType( MediaType.APPLICATION_JSON)
-					.content(json))
+		mockMvc.perform(post("/lecturer/user/student").contentType( MediaType.APPLICATION_JSON).content(json))
 			   .andExpect(status().isOk());
 	}
 	
