@@ -64,8 +64,8 @@ public class AdminService {
 
 	private void validRole(User user) {
 
-		if (!EnumUtils.isValidEnum(Role.class, user.getRole())) {
-			user.setRole(Role.STUDENT.name());
+		if (!EnumUtils.isValidEnum(Role.class, user.getRole().name())) {
+			user.setRole(Role.STUDENT);
 		}
 	}
 

@@ -72,8 +72,8 @@ public class AdminControllerTest {
 	
 	@Test
 	public void shouldSaveUserWithUniqueEmail() throws Exception {
-		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER.name()).build();
-		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER.name()).build();
+		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER).build();
+		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.LECTURER).build();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(unsavedUser);

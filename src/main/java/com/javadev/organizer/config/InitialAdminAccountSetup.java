@@ -6,6 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.repositories.UserRepository;
 
@@ -26,7 +27,7 @@ public class InitialAdminAccountSetup {
 
 		if (userRepository.findById(1L).orElse(null) == null) {
 			User admin = new User.Builder().firstName("admin").lastName("admin").email("admin@gmail.com")
-					.password("admin").role("ADMIN").build();
+					.password("admin").role(Role.ADMIN).build();
 			admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
 			userRepository.save(admin);

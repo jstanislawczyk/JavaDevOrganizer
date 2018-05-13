@@ -54,7 +54,7 @@ public class LecturerControllerTest {
 	
 	@Test
 	public void shouldFindUserById() throws Exception {
-		User expectedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
+		User expectedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT).build();
 		when(lecturerService.getUserById(1L)).thenReturn(expectedUser);
 		
 		mockMvc.perform(get("/lecturer/user/1")).andExpect(status().isOk());
@@ -81,8 +81,8 @@ public class LecturerControllerTest {
 	
 	@Test
 	public void shouldSaveStudentWithUniqueEmail() throws Exception {
-		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
-		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT.name()).build();
+		User unsavedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT).build();
+		User savedUser = new User.Builder().id(1L).email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT).build();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(unsavedUser);
@@ -96,8 +96,8 @@ public class LecturerControllerTest {
 	
 	private List<User> getExpectedUsers() {
 		List<User> expectedUsers = new ArrayList<>();
-		expectedUsers.add(new User.Builder().id(1L).email("jkowalski@mail.com").role(Role.STUDENT.name()).build());
-		expectedUsers.add(new User.Builder().id(2L).email("anowak@mail.com").role(Role.STUDENT.name()).build());
+		expectedUsers.add(new User.Builder().id(1L).email("jkowalski@mail.com").role(Role.STUDENT).build());
+		expectedUsers.add(new User.Builder().id(2L).email("anowak@mail.com").role(Role.STUDENT).build());
 
 		return expectedUsers;
 	}

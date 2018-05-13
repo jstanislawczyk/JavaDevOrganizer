@@ -3,6 +3,8 @@ package com.javadev.organizer.entities;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -54,7 +56,8 @@ public class User {
 
 	@Getter
 	@Setter
-	private String role;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
 	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	@JsonBackReference
@@ -78,7 +81,7 @@ public class User {
 		private String lastName;
 		private String email;
 		private String password;
-		private String role;
+		private Role role;
 		private List<Course> courses;
 
 		public Builder id(Long id) {
@@ -106,7 +109,7 @@ public class User {
 			return this;
 		}
 
-		public Builder role(String role) {
+		public Builder role(Role role) {
 			this.role = role;
 			return this;
 		}

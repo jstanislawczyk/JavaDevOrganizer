@@ -88,7 +88,7 @@ public class LecturerService {
 	}
 
 	private User setupStudent(User student) {
-		student.setRole(Role.STUDENT.name());
+		student.setRole(Role.STUDENT);
 		student.setPassword(passwordEncoder.encode(student.getPassword()));
 
 		return student;
