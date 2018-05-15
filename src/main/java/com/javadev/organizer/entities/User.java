@@ -1,5 +1,6 @@
 package com.javadev.organizer.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
@@ -27,7 +28,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,11 +60,11 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	@JsonBackReference
 	@Getter
 	@Setter
-	private List<Course> courses;
+	private List<UserPresence> userPresence;
 
 	public User(final Builder builder) {
 		this.id = builder.id;
@@ -72,7 +73,7 @@ public class User {
 		this.email = builder.email;
 		this.password = builder.password;
 		this.role = builder.role;
-		this.courses = builder.courses;
+		this.userPresence = builder.userPresence;
 	}
 
 	public static class Builder {
@@ -82,7 +83,7 @@ public class User {
 		private String email;
 		private String password;
 		private Role role;
-		private List<Course> courses;
+		private List<UserPresence> userPresence;
 
 		public Builder id(Long id) {
 			this.id = id;
@@ -114,8 +115,8 @@ public class User {
 			return this;
 		}
 
-		public Builder courses(List<Course> courses) {
-			this.courses = courses;
+		public Builder courses(List<UserPresence> userPresence) {
+			this.userPresence = userPresence;
 			return this;
 		}
 
