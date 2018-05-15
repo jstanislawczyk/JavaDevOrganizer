@@ -1,10 +1,8 @@
 package com.javadev.organizer.controllers;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,18 +18,16 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 
-	@PostMapping("/student/register-presence")
+	@PostMapping("/student/{userId}/courses/{courseId}")
 	@PreAuthorize("isAuthenticated()")
-	public void registerUserPresence(
-			@RequestParam(value = "courseId", required = true) Long courseId,
-			@RequestParam(value = "userId", required = true) Long userId) {
-
-		studentService.registerUserPresence(courseId, userId);
+	public void registerUserPresence(@PathVariable Long userId, @PathVariable Long courseId,
+			@RequestParam(value = "present", required = true) boolean present) {
+		studentService.registerUserPresence(courseId, userId, present);
 	}
 
-	@GetMapping("/student/{id}/courses/ids")
+	@GetMapping("/student/{id}/courses/")
 	@PreAuthorize("isAuthenticated()")
-	public HttpEntity<List<BigDecimal>> getCoursesIdsByUser(@PathVariable Long id) {
-		return studentService.getCoursesIdsByUser(id);
+	public Map<Long, Boolean> getCoursesStatusByUserId(@PathVariable Long id) {
+		return studentService.getCoursesStatusByUserId(id);
 	}
 }

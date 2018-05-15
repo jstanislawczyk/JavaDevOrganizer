@@ -1,75 +1,70 @@
 package com.javadev.organizer.services;
 
-import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.entities.UserPresence;
 import com.javadev.organizer.exceptions.PresenceNotSavedException;
+import com.javadev.organizer.exceptions.UserNotFoundException;
 import com.javadev.organizer.repositories.CourseRepository;
+import com.javadev.organizer.repositories.UserPresenceRepository;
 import com.javadev.organizer.repositories.UserRepository;
 
 @Service
 public class StudentService {
 	private CourseRepository courseRepository;
 	private UserRepository userRepository;
+	private UserPresenceRepository userPresenceRepository;
 
 	@Autowired
-	public StudentService(UserRepository userRepository, CourseRepository courseRepository) {
+	public StudentService(UserRepository userRepository, CourseRepository courseRepository,
+			UserPresenceRepository userPresenceRepository) {
 		this.userRepository = userRepository;
 		this.courseRepository = courseRepository;
+		this.userPresenceRepository = userPresenceRepository;
 	}
 
-	public void registerUserPresence(
-			@RequestParam(value = "courseId", required = true) Long courseId,
-			@RequestParam(value = "userId", required = true) Long userId) {
+	public void registerUserPresence(Long courseId, Long userId, boolean present) {
 
-		User user = userRepository.findById(userId).orElse(null);
-		Course course = courseRepository.findById(courseId).orElse(null);
+		User user = userRepository.findById(userId).orElseThrow(() -> new PresenceNotSavedException());
+		Course course = courseRepository.findById(courseId).orElseThrow(() -> new PresenceNotSavedException());
 
-		if (course != null || user != null) {
-
-			if (isPresenceNotRegistered(user, course) && isRegisteredAfterCourse(course)) {
-				savePresence(user, course);
-			} else {
-				throw new PresenceNotSavedException();
-			}
+		if (isRegisteredAfterCourse(course) && isUserPresenceStatusUnique(user, course)) {
+			saveStatus(user, course, present);
 		} else {
 			throw new PresenceNotSavedException();
 		}
 	}
 
-	public HttpEntity<List<BigDecimal>> getCoursesIdsByUser(@PathVariable Long id) {
+	public Map<Long, Boolean> getCoursesStatusByUserId(Long id) {
 
-		List<BigDecimal> courses = courseRepository.findCoursesIdsByUserId(id);
+		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
 
-		if (courses.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} else {
-			return ResponseEntity.ok(courses);
-		}
+		List<UserPresence> presences = userPresenceRepository.findByUser(user);
+		Map<Long, Boolean> coursesStatus = new HashMap<>();
+		
+		presences.forEach(presence -> coursesStatus.put(presence.getCourse().getId(), presence.getPresent()));
+		
+		return coursesStatus;
 	}
 
-	private boolean isPresenceNotRegistered(User user, Course course) {
-		if (course.getUsers().contains(user)) {
+	private boolean isUserPresenceStatusUnique(User user, Course course) {
+		if (userPresenceRepository.countByUserAndCourse(user, course)>0) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	private void savePresence(User user, Course course) {
-		course.getUsers().add(user);
-		courseRepository.save(course);
+	private void saveStatus(User user, Course course, boolean present) {
+		userPresenceRepository.save(UserPresence.builder().course(course).user(user).present(present).build());
 	}
 
 	private boolean isRegisteredAfterCourse(Course course) {

@@ -5,19 +5,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -51,22 +47,27 @@ public class StudentControllerTest {
 	
 	@Test
 	public void shouldReturnCoursesIds() throws Exception {
-		List<BigDecimal> expectedCoursesIds = new ArrayList<>();
-		expectedCoursesIds.add(new BigDecimal(new BigInteger("1")));
-		expectedCoursesIds.add(new BigDecimal(new BigInteger("5")));
-		expectedCoursesIds.add(new BigDecimal(new BigInteger("6")));
+		Map<Long, Boolean> coursesStatus = expectedCoursesStatus();	
+		when(studentService.getCoursesStatusByUserId(1L)).thenReturn(coursesStatus);
 		
-		when(studentService.getCoursesIdsByUser(1L)).thenReturn(ResponseEntity.ok(expectedCoursesIds));
-		
-		mockMvc.perform(get("/student/{id}/courses/ids", 1L))
+		mockMvc.perform(get("/student/{id}/courses/", 1L))
 			   .andExpect(status().isOk())
 			   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 	}
 	
 	@Test
 	public void shouldReturnCoursesIdsNotFound() throws Exception {
-		when(studentService.getCoursesIdsByUser(1L)).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		when(studentService.getCoursesStatusByUserId(1L)).thenReturn(new HashMap<Long, Boolean>());
 		
 		mockMvc.perform(get("/student/checkCoursesStatus/{id}", 1L)).andExpect(status().isNotFound());
+	}
+	
+	private Map<Long, Boolean> expectedCoursesStatus(){
+		Map<Long, Boolean> coursesStatus = new HashMap<>();	
+		coursesStatus.put(1L, true);
+		coursesStatus.put(2L, true);
+		coursesStatus.put(3L, false);
+		
+		return coursesStatus;
 	}
 }

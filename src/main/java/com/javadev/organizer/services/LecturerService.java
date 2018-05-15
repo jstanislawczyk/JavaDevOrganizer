@@ -33,7 +33,7 @@ public class LecturerService {
 	}
 
 	public List<User> getAllStudents() {
-		List<User> users = userRepository.findByRole(Role.STUDENT.name());
+		List<User> users = userRepository.findByRole(Role.STUDENT);
 
 		if (users.isEmpty()) {
 			throw new UsersListNotFoundException();
