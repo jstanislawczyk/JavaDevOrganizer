@@ -31,13 +31,13 @@ public class StudentService {
 		this.userPresenceRepository = userPresenceRepository;
 	}
 
-	public void registerUserPresence(Long courseId, Long userId, boolean present) {
+	public Long registerUserPresence(Long courseId, Long userId, boolean present) {
 
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User [id="+userId+"] not found"));
 		Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotSavedException("Course [id="+courseId+"] not found"));
 
 		if (isRegisteredAfterCourse(course) && isUserPresenceStatusUnique(user, course)) {
-			saveStatus(user, course, present);
+			return saveStatus(user, course, present);
 		} else {
 			throw new NotSavedException("Presence not saved");
 		}
@@ -63,8 +63,8 @@ public class StudentService {
 		}
 	}
 
-	private void saveStatus(User user, Course course, boolean present) {
-		userPresenceRepository.save(UserPresence.builder().course(course).user(user).present(present).build());
+	private Long saveStatus(User user, Course course, boolean present) {
+		return userPresenceRepository.save(UserPresence.builder().course(course).user(user).present(present).build()).getId();
 	}
 
 	private boolean isRegisteredAfterCourse(Course course) {

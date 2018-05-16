@@ -20,9 +20,8 @@ public class StudentController {
 
 	@PostMapping("/student/{userId}/courses/{courseId}")
 	@PreAuthorize("isAuthenticated()")
-	public void registerUserPresence(@PathVariable Long userId, @PathVariable Long courseId,
-			@RequestParam(value = "present", required = true) boolean present) {
-		studentService.registerUserPresence(courseId, userId, present);
+	public Long registerUserPresence(@PathVariable Long userId, @PathVariable Long courseId, @RequestParam(value = "present", required = true) boolean present) {
+		return studentService.registerUserPresence(courseId, userId, present);
 	}
 
 	@GetMapping("/student/{id}/courses/")
