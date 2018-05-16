@@ -24,10 +24,6 @@ public class CourseService {
 	
 	@Autowired
 	private CourseRepository courseRepository;
-	
-	public CourseRepository getCourseRepository() {
-		return courseRepository;
-	}
 
 	public Course getCourseById(Long id) {
 		return courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course [id="+id+"] not found"));
