@@ -14,10 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.entities.Course;
-import com.javadev.organizer.exceptions.CourseNotCreatedException;
-import com.javadev.organizer.exceptions.CourseNotDeletedException;
-import com.javadev.organizer.exceptions.CourseNotFoundException;
-import com.javadev.organizer.exceptions.CoursesListNotFoundException;
+import com.javadev.organizer.exceptions.NotDeletedException;
+import com.javadev.organizer.exceptions.NotFoundException;
+import com.javadev.organizer.exceptions.NotSavedException;
 import com.javadev.organizer.repositories.CourseRepository;
 
 @Service
@@ -31,7 +30,7 @@ public class CourseService {
 	}
 
 	public Course getCourseById(Long id) {
-		return courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
+		return courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course [id="+id+"] not found"));
 	}
 	
 	public List<Course> getAllCourses(){
@@ -40,7 +39,7 @@ public class CourseService {
 		Collections.sort(courses, (first, second) -> first.getId().intValue() - second.getId().intValue());
 
 		if (courses.isEmpty()) {
-			throw new CoursesListNotFoundException();
+			throw new NotFoundException("Courses list not found");
 		}
 		
 		return courses;
@@ -55,7 +54,7 @@ public class CourseService {
 			
 			return responseEntity;
 		} else {
-			throw new CourseNotCreatedException();
+			throw new NotSavedException("Can't save more than 8 courses");
 		}
 	}
 
@@ -80,13 +79,13 @@ public class CourseService {
 	}	
 	
 	public void deleteCourse(Long id) {
-		Course course = courseRepository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
+		Course course = courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course [id="+id+"] not found"));
 		Date currentDate = new Date(System.currentTimeMillis());
 
 		if (currentDate.before(course.getDate())) {
 			courseRepository.deleteById(id);
 		}else {
-			throw new CourseNotDeletedException(id);
+			throw new NotDeletedException("Course [id="+id+"] not deleted");
 		}
 	}
 	

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.entities.UserPresence;
-import com.javadev.organizer.exceptions.PresenceNotSavedException;
-import com.javadev.organizer.exceptions.UserNotFoundException;
+import com.javadev.organizer.exceptions.NotFoundException;
+import com.javadev.organizer.exceptions.NotSavedException;
 import com.javadev.organizer.repositories.CourseRepository;
 import com.javadev.organizer.repositories.UserPresenceRepository;
 import com.javadev.organizer.repositories.UserRepository;
@@ -33,19 +33,19 @@ public class StudentService {
 
 	public void registerUserPresence(Long courseId, Long userId, boolean present) {
 
-		User user = userRepository.findById(userId).orElseThrow(() -> new PresenceNotSavedException());
-		Course course = courseRepository.findById(courseId).orElseThrow(() -> new PresenceNotSavedException());
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User [id="+userId+"] not found"));
+		Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotSavedException("Course [id="+courseId+"] not found"));
 
 		if (isRegisteredAfterCourse(course) && isUserPresenceStatusUnique(user, course)) {
 			saveStatus(user, course, present);
 		} else {
-			throw new PresenceNotSavedException();
+			throw new NotSavedException("Presence not saved");
 		}
 	}
 
 	public Map<Long, Boolean> getCoursesStatusByUserId(Long id) {
 
-		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
 
 		List<UserPresence> presences = userPresenceRepository.findByUser(user);
 		Map<Long, Boolean> coursesStatus = new HashMap<>();

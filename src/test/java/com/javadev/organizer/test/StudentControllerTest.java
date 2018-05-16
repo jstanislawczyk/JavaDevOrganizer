@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.javadev.organizer.controllers.StudentController;
-import com.javadev.organizer.exceptions.handlers.GlobalUserExceptionsHandler;
+import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 import com.javadev.organizer.repositories.CourseRepository;
 import com.javadev.organizer.repositories.UserRepository;
 import com.javadev.organizer.services.StudentService;
@@ -42,7 +42,7 @@ public class StudentControllerTest {
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(studentController).setControllerAdvice(new GlobalUserExceptionsHandler()).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(studentController).setControllerAdvice(new GlobalExceptionHandler()).build();
 	}
 	
 	@Test

@@ -15,9 +15,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
-import com.javadev.organizer.exceptions.EmailNotUniqueException;
-import com.javadev.organizer.exceptions.UserNotFoundException;
-import com.javadev.organizer.exceptions.UsersListNotFoundException;
+import com.javadev.organizer.exceptions.NotFoundException;
+import com.javadev.organizer.exceptions.NotUniqueException;
 import com.javadev.organizer.repositories.UserRepository;
 
 @Service
@@ -36,14 +35,14 @@ public class LecturerService {
 		List<User> users = userRepository.findByRole(Role.STUDENT);
 
 		if (users.isEmpty()) {
-			throw new UsersListNotFoundException();
+			throw new NotFoundException("Students list not found");
 		}
 
 		return users;
 	}
 
 	public User getUserById(@PathVariable Long id) {
-		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
 
 		return user;
 	}
@@ -58,7 +57,7 @@ public class LecturerService {
 
 			return responseEntity;
 		} else {
-			throw new EmailNotUniqueException();
+			throw new NotUniqueException("Email already exists");
 		}
 	}
 

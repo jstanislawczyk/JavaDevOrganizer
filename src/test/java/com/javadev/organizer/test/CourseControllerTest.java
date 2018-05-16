@@ -20,9 +20,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javadev.organizer.controllers.CourseController;
 import com.javadev.organizer.entities.Course;
-import com.javadev.organizer.exceptions.CourseNotFoundException;
-import com.javadev.organizer.exceptions.CoursesListNotFoundException;
-import com.javadev.organizer.exceptions.handlers.GlobalCourseExceptionsHandler;
+import com.javadev.organizer.exceptions.NotFoundException;
+import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 import com.javadev.organizer.repositories.CourseRepository;
 import com.javadev.organizer.services.CourseService;
 
@@ -42,7 +41,7 @@ public class CourseControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);   
-		mockMvc = MockMvcBuilders.standaloneSetup(courseController).setControllerAdvice(new GlobalCourseExceptionsHandler()).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(courseController).setControllerAdvice(new GlobalExceptionHandler()).build();
 	}
 	
 	@Test
@@ -70,7 +69,7 @@ public class CourseControllerTest {
 	
 	@Test
 	public void shouldNotFindCourseById() throws Exception {
-		when(courseService.getCourseById(1L)).thenThrow(CourseNotFoundException.class);
+		when(courseService.getCourseById(1L)).thenThrow(new NotFoundException("Sample message"));
 		
 		mockMvc.perform(get("/course/1")).andExpect(status().isNotFound());
 	}
@@ -84,7 +83,7 @@ public class CourseControllerTest {
 	
 	@Test
 	public void shouldFindEmptyCoursesList() throws Exception {
-		when(courseService.getAllCourses().isEmpty()).thenThrow(CoursesListNotFoundException.class);
+		when(courseService.getAllCourses().isEmpty()).thenThrow(new NotFoundException("Sample message"));
 		
 		mockMvc.perform(get("/courses")).andExpect(status().isNotFound());
 	}

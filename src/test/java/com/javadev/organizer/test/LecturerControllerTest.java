@@ -25,8 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javadev.organizer.controllers.LecturerController;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
-import com.javadev.organizer.exceptions.UserNotFoundException;
-import com.javadev.organizer.exceptions.handlers.GlobalUserExceptionsHandler;
+import com.javadev.organizer.exceptions.NotFoundException;
+import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 import com.javadev.organizer.repositories.UserRepository;
 import com.javadev.organizer.services.LecturerService;
 
@@ -49,7 +49,7 @@ public class LecturerControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(lecturerController).setControllerAdvice(new GlobalUserExceptionsHandler()).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(lecturerController).setControllerAdvice(new GlobalExceptionHandler()).build();
 	}
 	
 	@Test
@@ -62,7 +62,7 @@ public class LecturerControllerTest {
 	
 	@Test
 	public void shouldNotFindUserById() throws Exception {
-		when(lecturerService.getUserById(1L)).thenThrow(new UserNotFoundException(1L));
+		when(lecturerService.getUserById(1L)).thenThrow(new NotFoundException("Sample message"));
 		
 		mockMvc.perform(get("/lecturer/user/1")).andExpect(status().isNotFound());
 	}

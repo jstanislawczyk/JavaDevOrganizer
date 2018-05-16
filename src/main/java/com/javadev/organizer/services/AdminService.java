@@ -16,8 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
-import com.javadev.organizer.exceptions.EmailNotUniqueException;
-import com.javadev.organizer.exceptions.UsersListNotFoundException;
+import com.javadev.organizer.exceptions.NotFoundException;
+import com.javadev.organizer.exceptions.NotUniqueException;
 import com.javadev.organizer.repositories.UserRepository;
 
 @Service
@@ -36,7 +36,7 @@ public class AdminService {
 		userRepository.findAll().forEach(users::add);
 
 		if (users.isEmpty()) {
-			throw new UsersListNotFoundException();
+			throw new NotFoundException("Users list not found");
 		}
 
 		return users;
@@ -53,7 +53,7 @@ public class AdminService {
 
 			return responseEntity;
 		} else {
-			throw new EmailNotUniqueException();
+			throw new NotUniqueException("Email already exists");
 		}
 	}
 
