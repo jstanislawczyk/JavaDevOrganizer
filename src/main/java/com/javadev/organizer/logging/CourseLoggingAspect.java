@@ -1,5 +1,6 @@
 package com.javadev.organizer.logging;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.config.SecurityConfig;
+import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 
 @Aspect
@@ -27,10 +29,13 @@ public class CourseLoggingAspect {
 	@Pointcut("execution(* com.javadev.organizer.controllers.CourseController.deleteCourse(Long)) && args(id)")
 	public void deleteCourse(Long id) {}
 	
+	@Pointcut("execution(* com.javadev.organizer.controllers.CourseController.saveCourse(..)) && args(..)")
+	public void saveCourse() {}
+	
 	
 	@Before("courseById(id)")
 	public void logBeforeGetCourseById(Long id) {
-		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempt to get course [id="+id+"]");
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to get course [id="+id+"]");
 	}
 	
 	@AfterReturning("courseById(id)")
@@ -40,17 +45,38 @@ public class CourseLoggingAspect {
 	
 	@Before("coursesList()")
 	public void logBeforeGetAllCourses() {
-		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempt to get all courses");
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to get all courses");
 	}
 	
-	@After("coursesList()")
+	@AfterReturning("coursesList()")
 	public void logAfterGetAllCourses() {
 		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] received all courses");
 	}
 	
+	@Before("saveCourse()")
+	public void logBeforeSaveCourse(JoinPoint joinPoint) {	
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to save course");
+	}
+	
+	@AfterReturning("saveCourse()")
+	public void logAfterSaveCourse(JoinPoint joinPoint) {
+		Object[] args = joinPoint.getArgs();
+		Course course = (Course) args[0];
+		
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved course [id="+course.getId()+"]");
+	}
+	
+	@AfterReturning("execution(* com.javadev.organizer.controllers.CourseController.updateCourse(..)) && args(..)")
+	public void logAfterUpdateCourse(JoinPoint joinPoint) {
+		Object[] args = joinPoint.getArgs();
+		Course course = (Course) args[0];
+		
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] updated course [id="+course.getId()+"]");
+	}
+	
 	@Before("deleteCourse(id)")
 	public void logBeforeDeleteCourse(Long id) {
-		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempt to delete course [id="+id+"]");
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to delete course [id="+id+"]");
 	}
 	
 	@After("deleteCourse(id)")
