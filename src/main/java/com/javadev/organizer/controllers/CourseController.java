@@ -45,14 +45,14 @@ public class CourseController {
 	
 	@PatchMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	@ResponseStatus(value = HttpStatus.OK, reason = "Course updated successfully")
+	@ResponseStatus(value = HttpStatus.OK)
 	public void updateCourse(@RequestBody Course updatedCourse, @PathVariable Long id) {
 		courseService.updateCourse(updatedCourse, id);
 	}
 
 	@DeleteMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	@ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Course deleted successfully")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void deleteCourse(@PathVariable Long id) {
 		courseService.deleteCourse(id);
 	}

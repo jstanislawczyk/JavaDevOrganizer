@@ -26,7 +26,7 @@ public class StudentLoggingAspect {
 	
 	@Before("registerUserPresence(userId, courseId, present)")
 	public void logBeforeRegisterUserPresence(Long userId, Long courseId, boolean present) {
-		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempt to save presence [courseId="+courseId+", userId="+userId+"]");
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to save presence [courseId="+courseId+", userId="+userId+"]");
 	}
 	
 	@AfterReturning("registerUserPresence(userId, courseId, present)")
@@ -36,7 +36,7 @@ public class StudentLoggingAspect {
 	
 	@Before("getCoursesStatusByUserId(id)")
 	public void logBeforeGetCoursesStatusByUserId(Long id) {
-		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempt to get courses status for user [userId="+id+"]");
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to get courses status for user [userId="+id+"]");
 	}
 	
 	@AfterReturning("getCoursesStatusByUserId(id)")
