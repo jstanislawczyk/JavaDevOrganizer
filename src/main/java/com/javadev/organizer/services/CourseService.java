@@ -25,11 +25,11 @@ public class CourseService {
 	@Autowired
 	private CourseRepository courseRepository;
 
-	public Course getCourseById(Long id) {
+	public Course getCourseById(Long id) throws NotFoundException {
 		return courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course [id="+id+"] not found"));
 	}
 	
-	public List<Course> getAllCourses(){
+	public List<Course> getAllCourses() throws NotFoundException {
 		List<Course> courses = new ArrayList<>();
 		courseRepository.findAll().forEach(courses::add);
 		Collections.sort(courses, (first, second) -> first.getId().intValue() - second.getId().intValue());
@@ -41,7 +41,7 @@ public class CourseService {
 		return courses;
 	}
 	
-	public ResponseEntity<Course> saveCourse(Course course, UriComponentsBuilder uriComponentsBuilder) {
+	public ResponseEntity<Course> saveCourse(Course course, UriComponentsBuilder uriComponentsBuilder) throws NotSavedException {
 
 		if (courseRepository.count() < 8) {
 			courseRepository.save(course);
@@ -54,7 +54,7 @@ public class CourseService {
 		}
 	}
 
-	public Course updateCourse( Course updatedCourse, Long id) {
+	public Course updateCourse(Course updatedCourse, Long id) {
 		Course course = courseRepository.findById(id).orElse(null);
 
 		if (updatedCourse.getName() != null && !updatedCourse.getName().equals(course.getName())) {
@@ -74,7 +74,7 @@ public class CourseService {
 		return course;
 	}	
 	
-	public void deleteCourse(Long id) {
+	public void deleteCourse(Long id) throws NotDeletedException {
 		Course course = courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course [id="+id+"] not found"));
 		Date currentDate = new Date(System.currentTimeMillis());
 

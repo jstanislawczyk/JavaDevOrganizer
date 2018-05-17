@@ -31,7 +31,7 @@ public class StudentService {
 		this.userPresenceRepository = userPresenceRepository;
 	}
 
-	public Long registerUserPresence(Long courseId, Long userId, boolean present) {
+	public Long registerUserPresence(Long courseId, Long userId, boolean present) throws NotSavedException {
 
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User [id="+userId+"] not found"));
 		Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotSavedException("Course [id="+courseId+"] not found"));
@@ -43,7 +43,7 @@ public class StudentService {
 		}
 	}
 
-	public Map<Long, Boolean> getCoursesStatusByUserId(Long id) {
+	public Map<Long, Boolean> getCoursesStatusByUserId(Long id) throws NotFoundException {
 
 		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
 

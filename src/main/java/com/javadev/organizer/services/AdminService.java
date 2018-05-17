@@ -31,7 +31,7 @@ public class AdminService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers() throws NotFoundException{
 		List<User> users = new ArrayList<>();
 		userRepository.findAll().forEach(users::add);
 
@@ -42,12 +42,12 @@ public class AdminService {
 		return users;
 	}
 
-	public ResponseEntity<User> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) {
+	public ResponseEntity<User> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
+		
 		setupUser(user);
 
 		if (isEmailUnique(user.getEmail())) {
 			userRepository.save(user);
-
 			HttpHeaders headers = buildLocationHeader(String.valueOf(user.getId()), uriComponentsBuilder);
 			ResponseEntity<User> responseEntity = new ResponseEntity<>(user, headers, HttpStatus.CREATED);
 

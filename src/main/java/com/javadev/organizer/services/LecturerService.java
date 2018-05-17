@@ -41,13 +41,14 @@ public class LecturerService {
 		return users;
 	}
 
-	public User getUserById(@PathVariable Long id) {
+	public User getUserById(@PathVariable Long id) throws NotFoundException {
 		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
 
 		return user;
 	}
 
-	public ResponseEntity<User> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) {
+	public ResponseEntity<User> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
+		
 		setupStudent(student);
 
 		if (isEmailUnique(student.getEmail())) {
