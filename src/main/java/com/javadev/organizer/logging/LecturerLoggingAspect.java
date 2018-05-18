@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.config.SecurityConfig;
 import com.javadev.organizer.dto.UserDto;
-import com.javadev.organizer.entities.Course;
+import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 
 @Aspect
@@ -62,9 +62,9 @@ public class LecturerLoggingAspect {
 	@AfterReturning("saveStudent()")
 	public void logAfterSaveStudent(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
-		Course course = (Course) args[0];
+		User user = (User) args[0];
 		
-		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved student [id="+course.getId()+"]");
+		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved student [id="+user.getId()+"]");
 	}
 	
 	@AfterReturning("execution(* com.javadev.organizer.controllers.LecturerController.updateUser(..)) && args(..)")
