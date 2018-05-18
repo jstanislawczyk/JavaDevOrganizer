@@ -67,7 +67,7 @@ public class LecturerLoggingAspect {
 		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved student [id="+course.getId()+"]");
 	}
 	
-	@AfterReturning("execution(* com.javadev.organizer.controllers.CourseController.updateStudent(..)) && args(..)")
+	@AfterReturning("execution(* com.javadev.organizer.controllers.LecturerController.update(..)) && args(..)")
 	public void logAfterUpdateStudent(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
 		User student = (User) args[0];

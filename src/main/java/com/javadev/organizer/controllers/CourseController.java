@@ -46,7 +46,6 @@ public class CourseController {
 	
 	@PatchMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	@ResponseStatus(value = HttpStatus.OK)
 	public void update(@RequestBody CourseDto course, @PathVariable Long id) {
 		courseService.updateCourse(course.getName(), course.getDescription(), course.getDate(), id);
 	}
