@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -41,7 +40,7 @@ public class LecturerService {
 		return users;
 	}
 
-	public User getUserById(@PathVariable Long id) throws NotFoundException {
+	public User getUserById(Long id) throws NotFoundException {
 		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
 
 		return user;
@@ -62,28 +61,16 @@ public class LecturerService {
 		}
 	}
 
-	public void updateStudent(@RequestBody User updatedStudent, @PathVariable Long id) {
-
-		// need refactor, todo
-
-		User student = userRepository.findById(id).orElse(null);
-
-		if (updatedStudent.getFirstName() != null && !updatedStudent.getFirstName().equals(student.getFirstName())) {
-			student.setFirstName(updatedStudent.getFirstName());
-		}
-
-		if (updatedStudent.getLastName() != null && !updatedStudent.getLastName().equals(student.getLastName())) {
-			student.setLastName(updatedStudent.getLastName());
-		}
-
-		if (isEmailUnique(updatedStudent.getEmail()) && updatedStudent.getEmail() != null && !updatedStudent.getEmail().equals(student.getEmail())) {
-			student.setEmail(updatedStudent.getEmail());
-		}
-
-		userRepository.save(student);
+	public void updateUser(String firstName, String lastName, String email, Long id) {
+		User user = userRepository.findById(id).orElse(null);
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setEmail(email);
+		
+		userRepository.save(user);
 	}
 
-	public void deleteStudent(@PathVariable Long id) {
+	public void deleteStudent(Long id) {
 		userRepository.deleteById(id);
 	}
 

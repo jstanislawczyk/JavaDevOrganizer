@@ -10,11 +10,15 @@ import javax.validation.constraints.Size;
 
 import com.javadev.organizer.entities.Role;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto implements Serializable{
 	
 	@Getter

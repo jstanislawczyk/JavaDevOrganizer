@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.services.LecturerService;
 
@@ -43,8 +44,8 @@ public class LecturerController {
 
 	@PatchMapping("/lecturer/user/student/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public void updateStudent(@RequestBody User updatedStudent, @PathVariable Long id) {
-		lecturerService.updateStudent(updatedStudent, id);
+	public void update(@RequestBody UserDto userDto, @PathVariable Long id) {
+		lecturerService.updateUser(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), id);
 	}
 
 	@DeleteMapping("/lecturer/user/student/{id}")

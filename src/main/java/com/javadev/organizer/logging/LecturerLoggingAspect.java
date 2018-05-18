@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.config.SecurityConfig;
+import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.entities.Course;
-import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 
 @Aspect
@@ -67,12 +67,12 @@ public class LecturerLoggingAspect {
 		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved student [id="+course.getId()+"]");
 	}
 	
-	@AfterReturning("execution(* com.javadev.organizer.controllers.LecturerController.update(..)) && args(..)")
+	@AfterReturning("execution(* com.javadev.organizer.controllers.LecturerController.updateUser(..)) && args(..)")
 	public void logAfterUpdateStudent(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
-		User student = (User) args[0];
+		UserDto user = (UserDto) args[0];
 		
-		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] updated student [id="+student.getId()+"]");
+		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] updated student [id="+user.getId()+"]");
 	}
 	
 	@Before("deleteStudent(id)")
