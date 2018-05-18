@@ -18,6 +18,13 @@ public class GlobalExceptionHandler {
 	
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	
+    @ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+	public Error internalServerErrorHandler() {
+		logger.error("EXCEPTION | Internal server error [500]");
+		return new Error(418, "Congratulations. You have found an easter egg");
+	}
+    
 	@ExceptionHandler(NotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Error notFoundHandler(NotFoundException notFoundException) {
