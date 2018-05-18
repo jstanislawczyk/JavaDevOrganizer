@@ -54,24 +54,14 @@ public class CourseService {
 		}
 	}
 
-	public Course updateCourse(Course updatedCourse, Long id) {
-		Course course = courseRepository.findById(id).orElse(null);
+	public void updateCourse(String name, String description, Date date, Long id) {
+		Course course = courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course [id="+id+"] not found"));
 
-		if (updatedCourse.getName() != null && !updatedCourse.getName().equals(course.getName())) {
-			course.setName(updatedCourse.getName());
-		}
-
-		if (updatedCourse.getDescription() != null && !updatedCourse.getDescription().equals(course.getDescription())) {
-			course.setDescription(updatedCourse.getDescription());
-		}
-
-		if (updatedCourse.getDate() != null && !updatedCourse.getDate().equals(course.getDate())) {
-			course.setDate(updatedCourse.getDate());
-		}
+		course.setName(name);
+		course.setDescription(description);
+		course.setDate(date);	
 
 		courseRepository.save(course);
-		
-		return course;
 	}	
 	
 	public void deleteCourse(Long id) throws NotDeletedException {

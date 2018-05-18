@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.javadev.organizer.dto.CourseDto;
 import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.services.CourseService;
 
@@ -46,8 +47,8 @@ public class CourseController {
 	@PatchMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void updateCourse(@RequestBody Course updatedCourse, @PathVariable Long id) {
-		courseService.updateCourse(updatedCourse, id);
+	public void update(@RequestBody CourseDto course, @PathVariable Long id) {
+		courseService.updateCourse(course.getName(), course.getDescription(), course.getDate(), id);
 	}
 
 	@DeleteMapping("/course/{id}")
