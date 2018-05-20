@@ -25,8 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javadev.organizer.controllers.AdminController;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
-import com.javadev.organizer.exceptions.NotFoundException;
-import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 import com.javadev.organizer.repositories.UserRepository;
 import com.javadev.organizer.services.AdminService;
 
@@ -49,7 +47,7 @@ public class AdminControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(adminController).setControllerAdvice(new GlobalExceptionHandler()).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
 	}
 
 	@Test
@@ -66,8 +64,8 @@ public class AdminControllerTest {
 
 	@Test
 	public void shouldReturnUserListNotFound() throws Exception {
-		when(adminService.getAllUsers().isEmpty()).thenThrow(NotFoundException.class);
-		mockMvc.perform(get("/admin/users")).andExpect(status().isNotFound());
+		when(adminService.getAllUsers()).thenReturn(new ArrayList<>());
+		mockMvc.perform(get("/admin/users")).andExpect(status().isOk());
 	}
 	
 	@Test

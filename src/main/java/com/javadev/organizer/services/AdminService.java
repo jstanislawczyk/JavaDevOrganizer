@@ -16,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
-import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.NotUniqueException;
 import com.javadev.organizer.repositories.UserRepository;
 
@@ -31,13 +30,9 @@ public class AdminService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public List<User> getAllUsers() throws NotFoundException{
+	public List<User> getAllUsers(){
 		List<User> users = new ArrayList<>();
 		userRepository.findAll().forEach(users::add);
-
-		if (users.isEmpty()) {
-			throw new NotFoundException("Users list not found");
-		}
 
 		return users;
 	}
