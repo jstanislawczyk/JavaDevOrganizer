@@ -1,6 +1,7 @@
 package com.javadev.organizer.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.javadev.organizer.dto.DtoConverter;
 import com.javadev.organizer.dto.UserDto;
-import com.javadev.organizer.entities.User;
 import com.javadev.organizer.services.LecturerService;
 
 @RestController
@@ -26,20 +27,20 @@ public class LecturerController {
 
 	@GetMapping("/lecturer/users/students")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public List<User> getAllStudents() {
-		return lecturerService.getAllStudents();
+	public List<UserDto> getAllStudents() {
+		return lecturerService.getAllStudents().stream().map(user -> DtoConverter.dtoFromUser(user)).collect(Collectors.toList());
 	}
 
 	@GetMapping("/lecturer/user/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public User getUserById(@PathVariable Long id) {
-		return lecturerService.getUserById(id);
+	public UserDto getUserById(@PathVariable Long id) {
+		return DtoConverter.dtoFromUser(lecturerService.getUserById(id));
 	}
 
 	@PostMapping("/lecturer/user/student")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public ResponseEntity<User> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) {
-		return lecturerService.saveStudent(student, uriComponentsBuilder);
+	public ResponseEntity<UserDto> saveStudent(@RequestBody UserDto studentDto, UriComponentsBuilder uriComponentsBuilder) {
+		return lecturerService.saveStudent(DtoConverter.userFromDto(studentDto), uriComponentsBuilder);
 	}
 
 	@PatchMapping("/lecturer/user/student/{id}")
