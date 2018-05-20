@@ -3,11 +3,11 @@ package com.javadev.organizer.exceptions.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.javadev.organizer.config.SecurityConfig;
 import com.javadev.organizer.exceptions.NotDeletedException;
 import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.NotSavedException;
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
 		return new Error(409, notDeletedException.getMessage());
 	}
 	
-	private String getCurrentUserEmail() {
-		return SecurityContextHolder.getContext().getAuthentication().getName();
+	public String getCurrentUserEmail() {
+		return SecurityConfig.getCurrentLoggedInUserEmail();
 	}
 }
