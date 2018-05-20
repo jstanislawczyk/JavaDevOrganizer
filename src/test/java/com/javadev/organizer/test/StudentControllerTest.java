@@ -10,10 +10,13 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -23,6 +26,8 @@ import com.javadev.organizer.repositories.CourseRepository;
 import com.javadev.organizer.repositories.UserRepository;
 import com.javadev.organizer.services.StudentService;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
 public class StudentControllerTest {
 
 	private MockMvc mockMvc;
