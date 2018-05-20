@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.javadev.organizer.dto.DtoConverter;
+import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.NotUniqueException;
@@ -37,16 +39,16 @@ public class AdminService {
 		return users;
 	}
 
-	public ResponseEntity<User> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
+	public ResponseEntity<UserDto> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
 		
 		setupUser(user);
 
 		if (isEmailUnique(user.getEmail())) {
 			userRepository.save(user);
+			UserDto userDto = DtoConverter.dtoFromUser(user);
 			HttpHeaders headers = buildLocationHeader(String.valueOf(user.getId()), uriComponentsBuilder);
-			ResponseEntity<User> responseEntity = new ResponseEntity<>(user, headers, HttpStatus.CREATED);
 
-			return responseEntity;
+			return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
 		} else {
 			throw new NotUniqueException("Email already exists");
 		}

@@ -1,6 +1,7 @@
 package com.javadev.organizer.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.javadev.organizer.entities.User;
+import com.javadev.organizer.dto.DtoConverter;
+import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.services.AdminService;
 
 @RestController
@@ -22,13 +24,13 @@ public class AdminController {
 
 	@GetMapping("/admin/users")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public List<User> getAllUsers() {
-		return adminService.getAllUsers();
+	public List<UserDto> getAllUsers() {
+		return adminService.getAllUsers().stream().map(user -> DtoConverter.dtoFromUser(user)).collect(Collectors.toList());
 	}
 
 	@PostMapping("/admin/user")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<User> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) {
-		return adminService.saveUser(user, uriComponentsBuilder);
+	public ResponseEntity<UserDto> saveUser(@RequestBody UserDto user, UriComponentsBuilder uriComponentsBuilder) {
+		return adminService.saveUser(DtoConverter.userFromDto(user), uriComponentsBuilder);
 	}
 }

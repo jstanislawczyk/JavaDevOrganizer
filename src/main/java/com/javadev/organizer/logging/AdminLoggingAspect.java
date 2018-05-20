@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.config.SecurityConfig;
-import com.javadev.organizer.entities.User;
+import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 
 @Aspect
@@ -35,7 +35,7 @@ public class AdminLoggingAspect {
 	@Before("execution(* com.javadev.organizer.controllers.AdminController.saveUser(..)) && args(..)")
 	public void logBeforeSaveUser(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
-		User user = (User) args[0];
+		UserDto user = (UserDto) args[0];
 		
 		logger.info("JAVADEV | Admin [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to save user [email="+user.getEmail()+"]");
 	}
@@ -43,7 +43,7 @@ public class AdminLoggingAspect {
 	@AfterReturning("execution(* com.javadev.organizer.controllers.AdminController.saveUser(..)) && args(..)")
 	public void logAfterSaveUser(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
-		User user = (User) args[0];
+		UserDto user = (UserDto) args[0];
 		
 		logger.info("JAVADEV | Admin [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved user [email="+user.getEmail()+"]");
 	}
