@@ -20,8 +20,8 @@ public class GlobalExceptionHandler {
 	
     @ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-	public Error internalServerErrorHandler() {
-		logger.error("EXCEPTION | Internal server error [500]");
+	public Error internalServerErrorHandler(Exception exception) {
+		logger.error("EXCEPTION | Internal server error [500] -> "+exception.getMessage());
 		return new Error(418, "Congratulations. You have found an easter egg");
 	}
     
