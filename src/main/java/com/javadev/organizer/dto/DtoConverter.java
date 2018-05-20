@@ -2,12 +2,15 @@ package com.javadev.organizer.dto;
 
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.entities.UserPresence;
 
+@Component
 public class DtoConverter {
-	public User userFromDto(UserDto userDto) {
+	public static User userFromDto(UserDto userDto) {
 		User user = new User.Builder()
 				.id(userDto.getId())
 				.firstName(userDto.getFirstName())
@@ -20,7 +23,7 @@ public class DtoConverter {
 		return user;
 	}
 	
-	public UserDto dtoFromUser(User user) {
+	public static UserDto dtoFromUser(User user) {
 		UserDto userDto = new UserDto.UserDtoBuilder()
 				.id(user.getId())
 				.firstName(user.getFirstName())
@@ -33,7 +36,7 @@ public class DtoConverter {
 		return userDto;
 	}
 	
-	public UserDto dtoFromUserWithPresence(User user) {
+	public static UserDto dtoFromUserWithPresence(User user) {
 		UserDto userDto = dtoFromUser(user);
 		userDto.setUserPresence(
 				user.getUserPresence().stream().map(userPresence -> dtoFromUserPresence(userPresence)).collect(Collectors.toList()));
@@ -41,7 +44,7 @@ public class DtoConverter {
 		return userDto;
 	}
 	
-	public CourseDto dtoFromCourse(Course course) {
+	public static CourseDto dtoFromCourse(Course course) {
 		CourseDto courseDto = new CourseDto.CourseDtoBuilder()
 				.id(course.getId())
 				.name(course.getName())
@@ -52,7 +55,7 @@ public class DtoConverter {
 		return courseDto;
 	}
 	
-	public UserPresenceDto dtoFromUserPresence(UserPresence userPresence) {
+	public static UserPresenceDto dtoFromUserPresence(UserPresence userPresence) {
 		UserPresenceDto userPresenceDto = new UserPresenceDto.UserPresenceDtoBuilder()
 				.id(userPresence.getId())
 				.present(userPresence.getPresent())
