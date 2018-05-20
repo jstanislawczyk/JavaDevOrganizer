@@ -30,7 +30,7 @@ public class AdminController {
 
 	@PostMapping("/admin/user")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<UserDto> saveUser(@RequestBody UserDto user, UriComponentsBuilder uriComponentsBuilder) {
-		return adminService.saveUser(DtoConverter.userFromDto(user), uriComponentsBuilder);
+	public ResponseEntity<UserDto> saveUser(@RequestBody UserDto userDto, UriComponentsBuilder uriComponentsBuilder) {
+		return adminService.saveUser(DtoConverter.userFromDto(userDto), uriComponentsBuilder);
 	}
 }
