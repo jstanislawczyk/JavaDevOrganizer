@@ -10,10 +10,14 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,6 +29,8 @@ import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 import com.javadev.organizer.repositories.CourseRepository;
 import com.javadev.organizer.services.CourseService;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
 public class CourseControllerTest {
 
 	private MockMvc mockMvc;
@@ -68,9 +74,9 @@ public class CourseControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(username = "admin@gmail.com", authorities = { "ADMIN", "LECTURER","USER" })
 	public void shouldNotFindCourseById() throws Exception {
-		when(courseService.getCourseById(1L)).thenThrow(new NotFoundException("Sample message"));
-		
+		when(courseService.getCourseById(1L)).thenThrow(new NotFoundException("Course [id=1] not found"));
 		mockMvc.perform(get("/course/1")).andExpect(status().isNotFound());
 	}
 	
@@ -83,9 +89,9 @@ public class CourseControllerTest {
 	
 	@Test
 	public void shouldFindEmptyCoursesList() throws Exception {
-		when(courseService.getAllCourses().isEmpty()).thenThrow(new NotFoundException("Sample message"));
+		when(courseService.getAllCourses()).thenReturn(new ArrayList<>());
 		
-		mockMvc.perform(get("/courses")).andExpect(status().isNotFound());
+		mockMvc.perform(get("/courses")).andExpect(status().isOk());
 	}
 	
 	private List<Course> expectedCourses(){

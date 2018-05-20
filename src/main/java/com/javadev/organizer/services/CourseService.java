@@ -32,11 +32,7 @@ public class CourseService {
 	public List<Course> getAllCourses() throws NotFoundException {
 		List<Course> courses = new ArrayList<>();
 		courseRepository.findAll().forEach(courses::add);
-		Collections.sort(courses, (first, second) -> first.getId().intValue() - second.getId().intValue());
-
-		if (courses.isEmpty()) {
-			throw new NotFoundException("Courses list not found");
-		}
+		Collections.sort(courses, (first, second) -> first.getDate().compareTo(second.getDate()));
 		
 		return courses;
 	}
