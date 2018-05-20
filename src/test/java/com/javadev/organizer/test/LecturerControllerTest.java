@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -66,8 +67,9 @@ public class LecturerControllerTest {
 	}
 	
 	@Test
+	@WithMockUser(username = "lecturer@gmail.com", authorities = { "LECTURER","USER" })
 	public void shouldNotFindUserById() throws Exception {
-		when(lecturerService.getUserById(1L)).thenThrow(new NotFoundException("Sample message"));
+		when(lecturerService.getUserById(1L)).thenThrow(new NotFoundException("User [id=1] not found"));
 		
 		mockMvc.perform(get("/lecturer/user/1")).andExpect(status().isNotFound());
 	}
