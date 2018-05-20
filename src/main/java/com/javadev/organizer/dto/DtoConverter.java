@@ -55,6 +55,17 @@ public class DtoConverter {
 		return courseDto;
 	}
 	
+	public static Course courseFromDto(CourseDto courseDto) {
+		Course course = new Course.Builder()
+				.id(courseDto.getId())
+				.name(courseDto.getName())
+				.description(courseDto.getDescription())
+				.date(courseDto.getDate())
+				.build();
+		
+		return course;
+	}
+	
 	public static UserPresenceDto dtoFromUserPresence(UserPresence userPresence) {
 		UserPresenceDto userPresenceDto = new UserPresenceDto.UserPresenceDtoBuilder()
 				.id(userPresence.getId())

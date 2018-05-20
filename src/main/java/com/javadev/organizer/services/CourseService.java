@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.javadev.organizer.dto.CourseDto;
+import com.javadev.organizer.dto.DtoConverter;
 import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.exceptions.NotDeletedException;
 import com.javadev.organizer.exceptions.NotFoundException;
@@ -37,14 +39,14 @@ public class CourseService {
 		return courses;
 	}
 	
-	public ResponseEntity<Course> saveCourse(Course course, UriComponentsBuilder uriComponentsBuilder) throws NotSavedException {
+	public ResponseEntity<CourseDto> saveCourse(Course course, UriComponentsBuilder uriComponentsBuilder) throws NotSavedException {
 
 		if (courseRepository.count() < 8) {
 			courseRepository.save(course);
 			HttpHeaders header = buildLocationHeader(String.valueOf(course.getId()), uriComponentsBuilder);
-			ResponseEntity<Course> responseEntity = new ResponseEntity<>(course, header, HttpStatus.CREATED);
+			CourseDto courseDto = DtoConverter.dtoFromCourse(course);
 			
-			return responseEntity;
+			return new ResponseEntity<>(courseDto, header, HttpStatus.CREATED);
 		} else {
 			throw new NotSavedException("Can't save more than 8 courses");
 		}

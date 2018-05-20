@@ -1,6 +1,7 @@
 package com.javadev.organizer.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.dto.CourseDto;
-import com.javadev.organizer.entities.Course;
+import com.javadev.organizer.dto.DtoConverter;
 import com.javadev.organizer.services.CourseService;
 
 @RestController
@@ -26,20 +27,20 @@ public class CourseController {
 
 	@GetMapping("/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public Course getCourseById(@PathVariable Long id) {
-		return courseService.getCourseById(id);
+	public CourseDto getCourseById(@PathVariable Long id) {
+		return DtoConverter.dtoFromCourse(courseService.getCourseById(id));
 	}
 
 	@GetMapping("/courses")
 	@PreAuthorize("isAuthenticated()")
-	public List<Course> getAllCourses() {
-		return courseService.getAllCourses();
+	public List<CourseDto> getAllCourses() {
+		return courseService.getAllCourses().stream().map(course -> DtoConverter.dtoFromCourse(course)).collect(Collectors.toList());
 	}
 	
 	@PostMapping("/course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public ResponseEntity<Course> saveCourse(@RequestBody Course course, UriComponentsBuilder uriComponentsBuilder) {
-		return courseService.saveCourse(course, uriComponentsBuilder);
+	public ResponseEntity<CourseDto> saveCourse(@RequestBody CourseDto courseDto, UriComponentsBuilder uriComponentsBuilder) {
+		return courseService.saveCourse(DtoConverter.courseFromDto(courseDto) , uriComponentsBuilder);
 	}
 	
 	@PatchMapping("/course/{id}")
