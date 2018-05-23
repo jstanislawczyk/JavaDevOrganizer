@@ -41,10 +41,10 @@ public class AdminService {
 
 	public ResponseEntity<UserDto> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
 		
-		setupUser(user);
-
 		if (isEmailUnique(user.getEmail())) {
+			setupUser(user);
 			userRepository.save(user);
+			
 			UserDto userDto = DtoConverter.dtoFromUser(user);
 			HttpHeaders headers = buildLocationHeader(String.valueOf(user.getId()), uriComponentsBuilder);
 

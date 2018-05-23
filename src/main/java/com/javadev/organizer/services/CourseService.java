@@ -43,6 +43,7 @@ public class CourseService {
 
 		if (courseRepository.count() < 8) {
 			courseRepository.save(course);
+			
 			HttpHeaders header = buildLocationHeader(String.valueOf(course.getId()), uriComponentsBuilder);
 			CourseDto courseDto = DtoConverter.dtoFromCourse(course);
 			

@@ -45,11 +45,11 @@ public class LecturerService {
 	}
 
 	public ResponseEntity<UserDto> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
-		
-		setupStudent(student);
 
 		if (isEmailUnique(student.getEmail())) {
+			setupStudent(student);
 			userRepository.save(student);
+			
 			HttpHeaders headers = buildLocationHeader(String.valueOf(student.getId()), uriComponentsBuilder);
 			UserDto studentDto = DtoConverter.dtoFromUser(student);
 
