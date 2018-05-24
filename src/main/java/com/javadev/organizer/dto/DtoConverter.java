@@ -2,13 +2,10 @@ package com.javadev.organizer.dto;
 
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
-
 import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.entities.UserPresence;
 
-@Component
 public class DtoConverter {
 	public static User userFromDto(UserDto userDto) {
 		User user = new User.Builder()
