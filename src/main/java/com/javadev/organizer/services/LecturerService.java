@@ -16,6 +16,7 @@ import com.javadev.organizer.dto.DtoConverter;
 import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.NotDeletedException;
 import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.NotUniqueException;
 import com.javadev.organizer.repositories.UserRepository;
@@ -68,8 +69,14 @@ public class LecturerService {
 		userRepository.save(user);
 	}
 
-	public void deleteStudent(Long id) {
-		userRepository.deleteById(id);
+	public void deleteStudent(Long id) throws NotFoundException, NotDeletedException{
+		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
+		
+		if (user.getRole() != Role.STUDENT) {
+            throw new NotDeletedException("Lecturer can delete only students");
+        }
+		
+		userRepository.deleteById(id);;
 	}
 
 	private User setupStudent(User student) {
