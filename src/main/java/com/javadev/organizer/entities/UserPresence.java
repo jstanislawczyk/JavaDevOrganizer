@@ -10,10 +10,9 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -22,24 +21,18 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
 public class UserPresence implements Serializable {
 	@Id
 	@GeneratedValue
-	@Getter
 	private Long id;
 
 	@ManyToOne(targetEntity = User.class)
-	@Getter
-	@Setter
 	private User user;
 
 	@ManyToOne(targetEntity = Course.class)
-	@Getter
-	@Setter
 	private Course course;
 
-	@Getter
-	@Setter
 	private Boolean present;
 }

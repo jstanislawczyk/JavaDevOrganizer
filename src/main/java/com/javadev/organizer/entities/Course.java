@@ -15,42 +15,33 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
+@Data
 @Table(name = "course")
 public class Course implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Getter
 	private Long id;
 
 	@Size(min = 5, max = 150, message = "Course name must contain 5-150 letters")
-	@Getter
-	@Setter
 	private String name;
 
 	@Size(min = 5, max = 300, message = "Course description must contain 5-300 letters")
-	@Getter
-	@Setter
 	private String description;
 
-	@Getter
-	@Setter
 	private Date date;
 
 	@OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
 	@JsonBackReference
-	@Getter
-	@Setter
 	private List<UserPresence> userPresence;
 
 	public Course(final Builder builder) {
