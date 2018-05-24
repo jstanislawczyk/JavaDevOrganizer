@@ -19,6 +19,7 @@ import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.NotDeletedException;
 import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.NotUniqueException;
+import com.javadev.organizer.exceptions.NotUpdatedException;
 import com.javadev.organizer.repositories.UserRepository;
 
 @Service
@@ -59,8 +60,13 @@ public class LecturerService {
 		}
 	}
 
-	public void updateUser(String firstName, String lastName, String email, Long id) {
-		User user = userRepository.findById(id).orElse(null);
+	public void updateStudent(String firstName, String lastName, String email, Long id) throws NotFoundException, NotUpdatedException {
+		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
+		
+		if(user.getRole() != Role.STUDENT) {
+			throw new NotUpdatedException("Lecturer can only update student");
+		}
+		
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setEmail(email);

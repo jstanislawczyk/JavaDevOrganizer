@@ -46,7 +46,7 @@ public class LecturerController {
 	@PatchMapping("/lecturer/user/student/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
-		lecturerService.updateUser(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), id);
+		lecturerService.updateStudent(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), id);
 	}
 
 	@DeleteMapping("/lecturer/user/student/{id}")
