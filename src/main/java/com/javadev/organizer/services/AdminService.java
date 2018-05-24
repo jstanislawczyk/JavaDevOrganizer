@@ -18,6 +18,7 @@ import com.javadev.organizer.dto.DtoConverter;
 import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.NotUniqueException;
 import com.javadev.organizer.repositories.UserRepository;
 
@@ -51,6 +52,15 @@ public class AdminService {
 		} else {
 			throw new NotUniqueException("Email already exists");
 		}
+	}
+	
+	public void updateUser(String firstName, String lastName, String email, Long id) throws NotFoundException {
+		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setEmail(email);
+		
+		userRepository.save(user);
 	}
 	
 	public void deleteUser(Long id){	
