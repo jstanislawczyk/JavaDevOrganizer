@@ -53,6 +53,10 @@ public class AdminService {
 			throw new NotUniqueException("Email already exists");
 		}
 	}
+	
+	public void deleteUser(Long id){	
+		userRepository.deleteById(id);;
+	}
 
 	private void setupUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
