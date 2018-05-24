@@ -12,6 +12,7 @@ import com.javadev.organizer.exceptions.NotDeletedException;
 import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.NotSavedException;
 import com.javadev.organizer.exceptions.NotUniqueException;
+import com.javadev.organizer.exceptions.NotUpdatedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler {
 	public Error notDeletedHandler(NotDeletedException notDeletedException) {
 		logger.info("EXCEPTION | [email="+getCurrentUserEmail()+"]: "+notDeletedException.getMessage());
 		return new Error(409, notDeletedException.getMessage());
+	}
+	
+	@ExceptionHandler(NotUpdatedException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public Error notUpdatedHandler(NotUpdatedException notUpdatedException) {
+		logger.info("EXCEPTION | [email="+getCurrentUserEmail()+"]: "+notUpdatedException.getMessage());
+		return new Error(409, notUpdatedException.getMessage());
 	}
 	
 	public String getCurrentUserEmail() {
