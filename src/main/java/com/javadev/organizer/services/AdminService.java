@@ -40,7 +40,6 @@ public class AdminService {
 	}
 
 	public ResponseEntity<UserDto> saveUser(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
-		
 		if (isEmailUnique(user.getEmail())) {
 			setupUser(user);
 			userRepository.save(user);

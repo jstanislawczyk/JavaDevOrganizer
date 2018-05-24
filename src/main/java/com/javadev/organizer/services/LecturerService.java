@@ -46,7 +46,6 @@ public class LecturerService {
 	}
 
 	public ResponseEntity<UserDto> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
-
 		if (isEmailUnique(student.getEmail())) {
 			setupStudent(student);
 			userRepository.save(student);

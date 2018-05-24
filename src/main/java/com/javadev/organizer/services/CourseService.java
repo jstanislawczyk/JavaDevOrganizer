@@ -40,7 +40,6 @@ public class CourseService {
 	}
 	
 	public ResponseEntity<CourseDto> saveCourse(Course course, UriComponentsBuilder uriComponentsBuilder) throws NotSavedException {
-
 		if (courseRepository.count() < 8) {
 			courseRepository.save(course);
 			
