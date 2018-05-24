@@ -1,6 +1,7 @@
 package com.javadev.organizer.logging;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -21,6 +22,9 @@ public class AdminLoggingAspect {
 	
 	@Pointcut("execution(* com.javadev.organizer.controllers.AdminController.getAllUsers())")
 	public void getAllUsers() {}
+	
+	@Pointcut("execution(* com.javadev.organizer.controllers.AdminController.deleteUser(Long)) && args(id)")
+	public void deleteUser(Long id) {}
 	
 	@Before("getAllUsers()")
 	public void logBeforeGetAllUsers() {
@@ -46,5 +50,23 @@ public class AdminLoggingAspect {
 		UserDto user = (UserDto) args[0];
 		
 		logger.info("JAVADEV | Admin [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved user [email="+user.getEmail()+"]");
+	}
+	
+	@AfterReturning("execution(* com.javadev.organizer.controllers.AdminController.updateUser(..)) && args(..)")
+	public void logAfterUpdateUser(JoinPoint joinPoint) {
+		Object[] args = joinPoint.getArgs();
+		UserDto user = (UserDto) args[0];
+		
+		logger.info("JAVADEV | Admin [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] updated user [id="+user.getId()+"]");
+	}
+	
+	@Before("deleteUser(id)")
+	public void logBeforeDeleteUser(Long id) {
+		logger.info("JAVADEV | Admin [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to delete user [id="+id+"]");
+	}
+	
+	@After("deleteUser(id)")
+	public void logAfterDeleteUser(Long id) {
+		logger.info("JAVADEV | Admin [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] deleted user [id="+id+"]");
 	}
 }
