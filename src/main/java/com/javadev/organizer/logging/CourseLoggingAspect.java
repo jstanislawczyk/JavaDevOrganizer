@@ -63,7 +63,7 @@ public class CourseLoggingAspect {
 		Object[] args = joinPoint.getArgs();
 		CourseDto course = (CourseDto) args[0];
 		
-		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved course [id="+course.getId()+"]");
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved course [id="+course.getName()+"]");
 	}
 	
 	@AfterReturning("execution(* com.javadev.organizer.controllers.CourseController.updateCourse(..)) && args(..)")
@@ -71,7 +71,7 @@ public class CourseLoggingAspect {
 		Object[] args = joinPoint.getArgs();
 		CourseDto course = (CourseDto) args[0];
 		
-		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] updated course [id="+course.getId()+"]");
+		logger.info("JAVADEV | User [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] updated course [id="+course.getName()+"]");
 	}
 	
 	@Before("deleteCourse(id)")

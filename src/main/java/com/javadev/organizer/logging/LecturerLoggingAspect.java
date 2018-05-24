@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.config.SecurityConfig;
 import com.javadev.organizer.dto.UserDto;
-import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 
 @Aspect
@@ -62,9 +61,9 @@ public class LecturerLoggingAspect {
 	@AfterReturning("saveStudent()")
 	public void logAfterSaveStudent(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
-		User user = (User) args[0];
+		UserDto user = (UserDto) args[0];
 		
-		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved student [id="+user.getId()+"]");
+		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] saved student [email="+user.getEmail()+"]");
 	}
 	
 	@AfterReturning("execution(* com.javadev.organizer.controllers.LecturerController.updateUser(..)) && args(..)")
