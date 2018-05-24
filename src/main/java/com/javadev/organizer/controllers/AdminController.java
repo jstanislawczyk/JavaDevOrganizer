@@ -37,15 +37,15 @@ public class AdminController {
 		return adminService.saveUser(DtoConverter.userFromDto(userDto), uriComponentsBuilder);
 	}
 	
-	@PatchMapping("/admin/user//{id}")
+	@PatchMapping("/admin/user/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
 		adminService.updateUser(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), id);
 	}
 	
-	@DeleteMapping("/admin/user")
+	@DeleteMapping("/admin/user/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public void deleteUser(Long id) {
+	public void deleteUser(@PathVariable Long id) {
 		adminService.deleteUser(id);
 	}
 }
