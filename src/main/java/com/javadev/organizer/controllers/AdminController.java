@@ -37,7 +37,7 @@ public class AdminController {
 		return adminService.saveUser(DtoConverter.userFromDto(userDto), uriComponentsBuilder);
 	}
 	
-	@PatchMapping("/lecturer/user/student/{id}")
+	@PatchMapping("/admin/user//{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
 		adminService.updateUser(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), id);
