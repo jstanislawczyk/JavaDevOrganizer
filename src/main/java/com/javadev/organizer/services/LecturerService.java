@@ -1,19 +1,12 @@
 package com.javadev.organizer.services;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import com.javadev.organizer.dto.DtoConverter;
-import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.NotDeletedException;
@@ -46,15 +39,12 @@ public class LecturerService {
 		return user;
 	}
 
-	public ResponseEntity<UserDto> saveStudent(@RequestBody User student, UriComponentsBuilder uriComponentsBuilder) throws NotUniqueException {
+	public User saveStudent(@RequestBody User student) throws NotUniqueException {
 		if (isEmailUnique(student.getEmail())) {
 			setupStudent(student);
 			userRepository.save(student);
-			
-			HttpHeaders headers = buildLocationHeader(String.valueOf(student.getId()), uriComponentsBuilder);
-			UserDto studentDto = DtoConverter.dtoFromUser(student);
 
-			return new ResponseEntity<>(studentDto, headers, HttpStatus.CREATED);
+			return student;
 		} else {
 			throw new NotUniqueException("Email already exists");
 		}
@@ -93,18 +83,5 @@ public class LecturerService {
 
 	private boolean isEmailUnique(String email) {
 		return (userRepository.countByEmail(email) == 0) ? true : false;
-	}
-
-	private HttpHeaders buildLocationHeader(String value, UriComponentsBuilder uriComponentsBuilder) {
-		HttpHeaders header = new HttpHeaders();
-		URI locationUri = buildUri("/lecturer/user/", value, uriComponentsBuilder);
-		header.setLocation(locationUri);
-
-		return header;
-	}
-
-	private URI buildUri(String path, String value, UriComponentsBuilder uriComponentsBuilder) {
-		URI locationUri = uriComponentsBuilder.path(path).path(value).build().toUri();
-		return locationUri;
 	}
 }
