@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,10 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.javadev.organizer.dto.CourseDto;
 import com.javadev.organizer.dto.DtoConverter;
+import com.javadev.organizer.entities.Course;
 import com.javadev.organizer.services.CourseService;
 
 @RestController
@@ -39,8 +41,10 @@ public class CourseController {
 	
 	@PostMapping("/course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public ResponseEntity<CourseDto> saveCourse(@RequestBody CourseDto courseDto, UriComponentsBuilder uriComponentsBuilder) {
-		return courseService.saveCourse(DtoConverter.courseFromDto(courseDto) , uriComponentsBuilder);
+	public ResponseEntity<CourseDto> saveCourse(@RequestBody CourseDto courseDto) {
+		Course course = courseService.saveCourse(DtoConverter.courseFromDto(courseDto));
+		
+		return buildResponseEntity(DtoConverter.dtoFromCourse(course));
 	}
 	
 	@PatchMapping("/course/{id}")
@@ -53,5 +57,12 @@ public class CourseController {
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void deleteCourse(@PathVariable Long id) {
 		courseService.deleteCourse(id);
+	}
+	
+	private ResponseEntity<CourseDto> buildResponseEntity(CourseDto courseDto) {
+		HttpHeaders header = new HttpHeaders();
+		header.set("Resource-path", "/course/"+courseDto.getId());
+		
+		return new ResponseEntity<CourseDto>(courseDto, header, HttpStatus.CREATED);
 	}
 }

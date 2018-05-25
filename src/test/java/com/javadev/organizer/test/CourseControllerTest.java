@@ -60,9 +60,10 @@ public class CourseControllerTest {
 		
 		when(courseRepository.count()).thenReturn(4L);
 		when(courseRepository.save(unsavedCourse)).thenReturn(savedCourse);
+		when(courseService.saveCourse(unsavedCourse)).thenReturn(savedCourse);
 		
 		mockMvc.perform(post("/course").contentType( MediaType.APPLICATION_JSON).content(json))
-			   .andExpect(status().is2xxSuccessful());
+			   .andExpect(status().isCreated());
 	}
 
 	@Test
