@@ -1,7 +1,6 @@
 package com.javadev.organizer.test;
 
 import static org.hamcrest.CoreMatchers.is;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,7 +29,7 @@ import com.javadev.organizer.controllers.AdminController;
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
 import com.javadev.organizer.repositories.UserRepository;
-import com.javadev.organizer.services.AdminService;
+import com.javadev.organizer.services.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -45,7 +44,7 @@ public class AdminControllerTest {
 	private PasswordEncoder passwordEncoder;
 
 	@Mock
-	private AdminService adminService;
+	private UserService userService;
 	
 	@InjectMocks
 	private AdminController adminController;
@@ -60,18 +59,18 @@ public class AdminControllerTest {
 	public void shouldReturnUserList() throws Exception {
 		List<User> expectedUsers = getExpectedUsers();
 
-		when(adminService.getAllUsers()).thenReturn(expectedUsers);
+		when(userService.getAllUsers()).thenReturn(expectedUsers);
 
-		mockMvc.perform(get("/admin/users")).andExpect(status().isOk())
+		mockMvc.perform(get("/api/users?role=ALL")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[0].email", is("jkowalski@mail.com")))
 				.andExpect(jsonPath("$[1].id", is(2))).andExpect(jsonPath("$[1].email", is("anowak@mail.com")));
 	}
 
 	@Test
-	public void shouldReturnUserListNotFound() throws Exception {
-		when(adminService.getAllUsers()).thenReturn(new ArrayList<>());
-		mockMvc.perform(get("/admin/users")).andExpect(status().isOk());
+	public void shouldReturnEmptyUserList() throws Exception {
+		when(userService.getAllUsers()).thenReturn(new ArrayList<>());
+		mockMvc.perform(get("/api/users?role=ALL")).andExpect(status().isOk());
 	}
 	
 	@Test
@@ -84,9 +83,9 @@ public class AdminControllerTest {
 		
 		when(userRepository.countByEmail("test@mail.com")).thenReturn(0L);
 		when(userRepository.save(unsavedUser)).thenReturn(savedUser);	
-		when(adminService.saveUser(unsavedUser)).thenReturn(savedUser);
+		when(userService.saveUser(unsavedUser)).thenReturn(savedUser);
 		
-		mockMvc.perform(post("/admin/user")
+		mockMvc.perform(post("/api/user")
 			   .contentType( MediaType.APPLICATION_JSON).content(json))
 			   .andExpect(status().isCreated());
 	}

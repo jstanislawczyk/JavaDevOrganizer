@@ -16,21 +16,33 @@ import com.javadev.organizer.exceptions.NotUniqueException;
 import com.javadev.organizer.repositories.UserRepository;
 
 @Service
-public class AdminService {
-	private UserRepository userRepository;
+public class UserService {
+
 	private PasswordEncoder passwordEncoder;
-
+	private UserRepository userRepository;
+	
 	@Autowired
-	public AdminService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-		this.userRepository = userRepository;
+	public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
 		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
 	}
+	
+	public User getUserById(Long id) throws NotFoundException {
+		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User [id="+id+"] not found"));
 
+		return user;
+	}
+	
 	public List<User> getAllUsers(){
 		List<User> users = new ArrayList<>();
 		userRepository.findAll().forEach(users::add);
 
 		return users;
+	}
+	
+	public List<User> getAllUsersByRole(String role){
+		validRole(role);
+		return userRepository.findByRole(Role.valueOf(role));
 	}
 
 	public User saveUser(@RequestBody User user) throws NotUniqueException {
@@ -54,18 +66,17 @@ public class AdminService {
 	}
 	
 	public void deleteUser(Long id){	
-		userRepository.deleteById(id);;
+		userRepository.deleteById(id);
 	}
 
 	private void setupUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		validRole(user);
+		validRole(user.getRole().name());
 	}
 
-	private void validRole(User user) {
-
-		if (!EnumUtils.isValidEnum(Role.class, user.getRole().name())) {
-			user.setRole(Role.STUDENT);
+	private void validRole(String role) throws NotFoundException {
+		if (!EnumUtils.isValidEnum(Role.class, role)) {
+			throw new NotFoundException("Wrong role");
 		}
 	}
 

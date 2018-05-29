@@ -14,47 +14,55 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.javadev.organizer.dto.DtoConverter;
 import com.javadev.organizer.dto.UserDto;
 import com.javadev.organizer.entities.User;
-import com.javadev.organizer.services.AdminService;
+import com.javadev.organizer.exceptions.NotFoundException;
+import com.javadev.organizer.services.UserService;
 
 @RestController
 public class AdminController {
 
 	@Autowired
-	private AdminService adminService;
+	private UserService userService;
 
-	@GetMapping("/admin/users")
+	@GetMapping(value = "/api/users", params = "role=ALL")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<UserDto> getAllUsers() {
-		return adminService.getAllUsers().stream().map(user -> DtoConverter.dtoFromUser(user)).collect(Collectors.toList());
+		return userService.getAllUsers().stream().map(user -> DtoConverter.dtoFromUser(user)).collect(Collectors.toList());
+	}
+	
+	@GetMapping(value = "/api/users", params = {"role!=ALL", "role!=STUDENT"})
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public List<UserDto> getAllUsersByRole(@RequestParam(name="role") String role) {
+		return userService.getAllUsersByRole(role).stream().map(user -> DtoConverter.dtoFromUser(user)).collect(Collectors.toList());
 	}
 
-	@PostMapping("/admin/user")
+	@PostMapping("/api/user")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<UserDto> saveUser(@RequestBody UserDto userDto) {
-		User user = adminService.saveUser(DtoConverter.userFromDto(userDto));
+		User user = userService.saveUser(DtoConverter.userFromDto(userDto));
 		return buildResponseEntity(DtoConverter.dtoFromUser(user));
 	}
 	
-	@PatchMapping("/admin/user/{id}")
+	@PatchMapping("/api/user/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public void updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
-		adminService.updateUser(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), id);
+	public void updateUser(@RequestBody UserDto userDto, @PathVariable Long id) throws NotFoundException{
+		userService.updateUser(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), id);
 	}
 	
-	@DeleteMapping("/admin/user/{id}")
+	@DeleteMapping("/api/user/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteUser(@PathVariable Long id) {
-		adminService.deleteUser(id);
+		userService.deleteUser(id);
 	}
 	
 	private ResponseEntity<UserDto> buildResponseEntity(UserDto userDto) {
 		HttpHeaders header = new HttpHeaders();
-		header.set("Resource-path", "/lecturer/user/"+userDto.getId());
+		header.set("Resource-path", "/api/user/"+userDto.getId());
 		
 		return new ResponseEntity<UserDto>(userDto, header, HttpStatus.CREATED);
 	}
