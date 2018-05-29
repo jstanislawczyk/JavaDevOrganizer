@@ -27,19 +27,19 @@ public class CourseController {
 	@Autowired
 	private CourseService courseService;
 
-	@GetMapping("/course/{id}")
+	@GetMapping("/api/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public CourseDto getCourseById(@PathVariable Long id) {
 		return DtoConverter.dtoFromCourse(courseService.getCourseById(id));
 	}
 
-	@GetMapping("/courses")
+	@GetMapping("/api/courses")
 	@PreAuthorize("isAuthenticated()")
 	public List<CourseDto> getAllCourses() {
 		return courseService.getAllCourses().stream().map(course -> DtoConverter.dtoFromCourse(course)).collect(Collectors.toList());
 	}
 	
-	@PostMapping("/course")
+	@PostMapping("/api/course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public ResponseEntity<CourseDto> saveCourse(@RequestBody CourseDto courseDto) {
 		Course course = courseService.saveCourse(DtoConverter.courseFromDto(courseDto));
@@ -47,13 +47,13 @@ public class CourseController {
 		return buildResponseEntity(DtoConverter.dtoFromCourse(course));
 	}
 	
-	@PatchMapping("/course/{id}")
+	@PatchMapping("/api/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void updateCourse(@RequestBody CourseDto courseDto, @PathVariable Long id) {
 		courseService.updateCourse(courseDto.getName(), courseDto.getDescription(), courseDto.getDate(), id);
 	}
 
-	@DeleteMapping("/course/{id}")
+	@DeleteMapping("/api/course/{id}")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
 	public void deleteCourse(@PathVariable Long id) {
 		courseService.deleteCourse(id);
