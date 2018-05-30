@@ -44,7 +44,7 @@ public class User implements Serializable {
 	private String email;
 
 	@Size(min = 6, max = 60, message = "Password must contain 6-60 characters")
-	private String password;
+	private char[] password;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
@@ -68,7 +68,7 @@ public class User implements Serializable {
 		private String firstName;
 		private String lastName;
 		private String email;
-		private String password;
+		private char[] password;
 		private Role role;
 		private List<UserPresence> userPresence;
 
@@ -92,7 +92,7 @@ public class User implements Serializable {
 			return this;
 		}
 
-		public Builder password(String password) {
+		public Builder password(char[] password) {
 			this.password = password;
 			return this;
 		}

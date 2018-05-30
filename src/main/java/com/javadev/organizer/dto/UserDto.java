@@ -42,7 +42,7 @@ public class UserDto implements Serializable{
 	@Size(min = 6, max = 60, message = "Password must contain 6-60 characters")
 	@Getter
 	@Setter
-	private String password;
+	private char[] password;
 
 	@Getter
 	@Setter

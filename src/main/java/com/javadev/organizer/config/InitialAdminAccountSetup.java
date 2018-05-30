@@ -1,5 +1,7 @@
 package com.javadev.organizer.config;
 
+import java.nio.CharBuffer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -27,8 +29,8 @@ public class InitialAdminAccountSetup {
 
 		if (userRepository.findById(1L).orElse(null) == null) {
 			User admin = new User.Builder().firstName("admin").lastName("admin").email("admin@gmail.com")
-					.password("admin").role(Role.ADMIN).build();
-			admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+					.password("admin".toCharArray()).role(Role.ADMIN).build();
+			admin.setPassword(passwordEncoder.encode(CharBuffer.wrap(admin.getPassword())).toCharArray());
 
 			userRepository.save(admin);
 		}

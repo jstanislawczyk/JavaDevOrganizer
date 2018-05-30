@@ -1,5 +1,6 @@
 package com.javadev.organizer.services;
 
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,8 @@ public class UserService {
 	}
 
 	private void setupUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		CharBuffer passwordBuffer = CharBuffer.wrap(user.getPassword());
+		user.setPassword(passwordEncoder.encode(passwordBuffer).toCharArray());
 		validRole(user.getRole().name());
 	}
 
