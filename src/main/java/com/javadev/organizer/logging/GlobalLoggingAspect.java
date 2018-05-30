@@ -12,13 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.config.SecurityConfig;
-import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 
 @Aspect
 @Component
 public class GlobalLoggingAspect {
 	
-	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(GlobalLoggingAspect.class);
 
 	@Pointcut("execution(* com.javadev.organizer.controllers.*.get*ById(Long)) && args(id)")
 	public void objectById(Long id) {}

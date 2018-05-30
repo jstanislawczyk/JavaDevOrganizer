@@ -12,13 +12,12 @@ import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.config.SecurityConfig;
 import com.javadev.organizer.dto.CourseDto;
-import com.javadev.organizer.exceptions.handlers.GlobalExceptionHandler;
 
 @Aspect
 @Component
 public class CourseLoggingAspect {
 
-	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(CourseLoggingAspect.class);
 	
 	@Pointcut("execution(* com.javadev.organizer.controllers.CourseController.getCourseById(Long)) && args(id)")
 	public void courseById(Long id) {}
