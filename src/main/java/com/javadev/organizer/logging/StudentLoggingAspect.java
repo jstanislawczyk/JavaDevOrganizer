@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.javadev.organizer.config.SecurityConfig;
+import com.javadev.organizer.security.SecurityConfig;
 
 @Aspect
 @Component
@@ -21,7 +21,6 @@ public class StudentLoggingAspect {
 	
 	@Pointcut("execution(* com.javadev.organizer.controllers.StudentController.getCoursesStatusByUserId(Long)) && args(id)")
 	public void getCoursesStatusByUserId(Long id) {}
-	
 	
 	@Before("registerUserPresence(userId, courseId, present)")
 	public void logBeforeRegisterUserPresence(Long userId, Long courseId, boolean present) {

@@ -28,7 +28,7 @@ public class CourseController {
 	private CourseService courseService;
 
 	@GetMapping("/api/course/{id}")
-	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
+	@PreAuthorize("isAuthenticated()")
 	public CourseDto getCourseById(@PathVariable Long id) {
 		return DtoConverter.dtoFromCourse(courseService.getCourseById(id));
 	}

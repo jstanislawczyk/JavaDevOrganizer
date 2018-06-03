@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.javadev.organizer.config.SecurityConfig;
 import com.javadev.organizer.dto.UserDto;
+import com.javadev.organizer.security.SecurityConfig;
 
 @Aspect
 @Component
@@ -30,7 +30,6 @@ public class LecturerLoggingAspect {
 	
 	@Pointcut("execution(* com.javadev.organizer.controllers.LecturerController.saveStudent(..)) && args(..)")
 	public void saveStudent() {}
-	
 	
 	@Before("studentById(id)")
 	public void logBeforeGetStudentById(Long id) {
