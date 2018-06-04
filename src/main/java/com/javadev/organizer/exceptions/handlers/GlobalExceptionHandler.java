@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.javadev.organizer.config.SecurityConfig;
 import com.javadev.organizer.exceptions.NotDeletedException;
 import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.NotSavedException;
 import com.javadev.organizer.exceptions.NotUniqueException;
 import com.javadev.organizer.exceptions.NotUpdatedException;
 import com.javadev.organizer.exceptions.TokenErrorException;
-import com.javadev.organizer.security.SecurityConfig;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 		return new Error(418, "Congratulations. You have found an easter egg");
 	}
     
-    @ExceptionHandler
+    @ExceptionHandler(TokenErrorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Error tokenExceptionHandler(TokenErrorException tokenErrorException) {
     	logger.info("EXCEPTION | Token error ocurred -> "+tokenErrorException.getMessage());
