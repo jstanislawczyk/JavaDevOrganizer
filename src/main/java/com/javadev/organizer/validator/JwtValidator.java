@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.validator;
 
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,6 @@ import io.jsonwebtoken.Jwts;
 
 @Component
 public class JwtValidator {
-
 
     private String secret = "JavaDev";
 
@@ -26,8 +25,9 @@ public class JwtValidator {
             user = new User();
 
             user.setEmail(body.getSubject());
-            user.setRole(Role.valueOf((String) body.get("role")));
-            user.setPassword(((String) body.get("password")).toCharArray());
+            user.setRole(Role.valueOf( (String) body.get("role")));
+            user.setPassword(( (String) body.get("password")).toCharArray());
+            user.setId(Long.parseLong(String.valueOf(body.get("id"))));
         }
         catch (Exception e) {
             System.out.println(e);

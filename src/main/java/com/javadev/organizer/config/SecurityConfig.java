@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.config;
 
 import java.util.Collections;
 
@@ -17,11 +17,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.javadev.organizer.security.jwt.config.JwtAuthenticationEntryPoint;
+import com.javadev.organizer.security.jwt.config.JwtAuthenticationProvider;
+import com.javadev.organizer.security.jwt.config.JwtAuthenticationTokenFilter;
+import com.javadev.organizer.security.jwt.config.JwtSuccessHandler;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-	
 	
 	@Autowired
     private JwtAuthenticationProvider authenticationProvider;

@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.security.jwt.config;
 
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,7 @@ public class JwtGenerator {
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         claims.put("password", user.getPassword());
         claims.put("role", user.getRole());
+        claims.put("id", user.getId());
         
         return Jwts.builder()
                 .setClaims(claims)

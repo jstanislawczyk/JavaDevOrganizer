@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,7 @@ import com.javadev.organizer.entities.User;
 import com.javadev.organizer.exceptions.NotFoundException;
 import com.javadev.organizer.exceptions.TokenErrorException;
 import com.javadev.organizer.repositories.UserRepository;
+import com.javadev.organizer.security.jwt.config.JwtGenerator;
 
 @Service
 public class TokenService {
@@ -34,7 +35,7 @@ public class TokenService {
     	User user = userRepository.findByEmail(givenUser.getEmail()).orElseThrow( () -> new NotFoundException("User not found [email=" +givenUser.getEmail()+ "]"));
     	
     	if(isPasswordCorrect(user, givenUser)) {
-    		updateUserAuthorities(givenUser, user);
+    		setUserDetails(givenUser, user);
     		return true;
     	} else {
     		return false;
@@ -49,8 +50,10 @@ public class TokenService {
     	}
     }
     
-    private User updateUserAuthorities(User givenUser, User user) {
+    private User setUserDetails(User givenUser, User user) {
+    	givenUser.setId(user.getId());
     	givenUser.setRole(user.getRole());
+    	
     	return givenUser;
     }
 }

@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.security.jwt.config;
 
 import java.io.IOException;
 
@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
+import com.javadev.organizer.exceptions.TokenErrorException;
+
 public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {
 
     public JwtAuthenticationTokenFilter() {
@@ -18,12 +20,13 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) 
+    		throws AuthenticationException, IOException, ServletException, TokenErrorException {
 
         String header = httpServletRequest.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Token ")) {
-            throw new RuntimeException("JWT Token is not found");
+            throw new TokenErrorException("JWT Token is not found");
         }
 
         String authenticationToken = header.substring(6);

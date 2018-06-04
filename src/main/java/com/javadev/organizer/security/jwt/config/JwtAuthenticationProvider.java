@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.security.jwt.config;
 
 import java.util.List;
 
@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.javadev.organizer.entities.User;
+import com.javadev.organizer.exceptions.TokenErrorException;
+import com.javadev.organizer.validator.JwtValidator;
 
 @Component
 public class JwtAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
@@ -33,12 +35,12 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
         User user = validator.validate(token);
 
         if (user == null) {
-            throw new RuntimeException("JWT Token is incorrect");
+            throw new TokenErrorException("JWT Token is incorrect");
         }
-
+        
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRole().toString());
         
-        return new JwtUserDetails(user.getEmail(), token, grantedAuthorities);
+        return new JwtUserDetails(user.getId(), user.getEmail(), token, grantedAuthorities);
     }
 
     @Override

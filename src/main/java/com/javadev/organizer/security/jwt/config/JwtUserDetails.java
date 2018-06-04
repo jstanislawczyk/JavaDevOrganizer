@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.security.jwt.config;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,12 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class JwtUserDetails implements UserDetails {
 
+	private Long id;
     private String email;
     private String token;
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public JwtUserDetails(String email, String token, List<GrantedAuthority> grantedAuthorities) {
+    public JwtUserDetails(Long id, String email, String token, List<GrantedAuthority> grantedAuthorities) {
+    	this.id = id;
         this.email = email;
         this.token= token;
         this.authorities = grantedAuthorities;
@@ -53,10 +55,9 @@ public class JwtUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
-    public String getUserName() {
-        return email;
+    
+    public Long getId() {
+    	return id;
     }
 
     public String getToken() {

@@ -1,4 +1,4 @@
-package com.javadev.organizer.security;
+package com.javadev.organizer.security.jwt.config;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
