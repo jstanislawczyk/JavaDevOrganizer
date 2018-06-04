@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.javadev.organizer.dto.DtoConverter;
@@ -18,12 +17,6 @@ public class LecturerController {
 
 	@Autowired
 	private UserService userService;
-
-	@GetMapping("/api/user/{id}")
-	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public UserDto getUserById(@PathVariable Long id) {
-		return DtoConverter.dtoFromUser(userService.getUserById(id));
-	}
 	
 	@GetMapping(value = "/api/users", params = "role=STUDENT")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")

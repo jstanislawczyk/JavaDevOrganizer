@@ -10,17 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.javadev.organizer.config.SecurityConfig;
 import com.javadev.organizer.dto.UserDto;
-import com.javadev.organizer.security.SecurityConfig;
 
 @Aspect
 @Component
 public class LecturerLoggingAspect {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LecturerLoggingAspect.class);
-	
-	@Pointcut("execution(* com.javadev.organizer.controllers.LecturerController.getUserById(Long)) && args(id)")
-	public void studentById(Long id) {}
 	
 	@Pointcut("execution(* com.javadev.organizer.controllers.LecturerController.getAllStudents())")
 	public void studentsList() {}
@@ -30,16 +27,6 @@ public class LecturerLoggingAspect {
 	
 	@Pointcut("execution(* com.javadev.organizer.controllers.LecturerController.saveStudent(..)) && args(..)")
 	public void saveStudent() {}
-	
-	@Before("studentById(id)")
-	public void logBeforeGetStudentById(Long id) {
-		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] attempts to get student [id="+id+"]");
-	}
-	
-	@AfterReturning("studentById(id)")
-	public void logAfterGetStudentById(Long id) {
-		logger.info("JAVADEV | Lecturer [email="+SecurityConfig.getCurrentLoggedInUserEmail()+"] received student [id="+id+"]");
-	}
 	
 	@Before("studentsList()")
 	public void logBeforeGetAllStudents() {
