@@ -57,14 +57,6 @@ public class LecturerControllerTest {
 	}
 	
 	@Test
-	public void shouldFindUserById() throws Exception {
-		User expectedUser = new User.Builder().email("test@mail.com").firstName("Jan").lastName("Kowalski").role(Role.STUDENT).build();
-		when(userService.getUserById(1L)).thenReturn(expectedUser);
-		
-		mockMvc.perform(get("/api/user/1")).andExpect(status().isOk());
-	}
-	
-	@Test
 	@WithMockUser(username = "lecturer@gmail.com", authorities = { "LECTURER","USER" })
 	public void shouldNotFindUserById() throws Exception {
 		when(userService.getUserById(1L)).thenThrow(new NotFoundException("User [id=1] not found"));
