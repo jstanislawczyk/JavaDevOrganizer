@@ -3,6 +3,8 @@ package com.javadev.organizer.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,7 +43,7 @@ public class CourseController {
 	
 	@PostMapping("/api/course")
 	@PreAuthorize("hasAnyAuthority('LECTURER','ADMIN')")
-	public ResponseEntity<CourseDto> saveCourse(@RequestBody CourseDto courseDto) {
+	public ResponseEntity<CourseDto> saveCourse(@RequestBody @Valid CourseDto courseDto) {
 		Course course = courseService.saveCourse(DtoConverter.courseFromDto(courseDto));
 		
 		return buildResponseEntity(DtoConverter.dtoFromCourse(course));

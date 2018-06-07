@@ -20,12 +20,12 @@ public class CourseDto implements Serializable {
 	@Getter
 	private Long id;
 	
-	@Size(min=5, max=150, message="Course name must contain 5-150 letters")
+	@Size(min=5, max=150, message="{course.name.message}")
 	@Getter
 	@Setter
 	private String name;
 	
-	@Size(min=5, max=300, message="Course description must contain 5-300 letters")
+	@Size(min=5, max=300, message="{course.description.message}")
 	@Getter
 	@Setter
 	private String description;
