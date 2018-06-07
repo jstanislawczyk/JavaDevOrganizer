@@ -34,16 +34,16 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Size(min = 2, max = 50, message = "{firstName.message}")
+	@Size(min = 2, max = 50, message = "{user.firstName.message}")
 	private String firstName;
 
-	@Size(min = 2, max = 60, message = "{lastName.message}")
+	@Size(min = 2, max = 60, message = "{user.lastName.message}")
 	private String lastName;
 
-	@Email(message="{email.message}")
+	@Email(message="{user.email.message}")
 	private String email;
 
-	@Size(min = 6, max = 60, message = "{password.message}")
+	@Size(min = 6, max = 60, message = "{user.password.message}")
 	private char[] password;
 
 	@Enumerated(EnumType.STRING)
