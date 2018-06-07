@@ -3,6 +3,8 @@ package com.javadev.organizer.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,7 +45,7 @@ public class AdminController {
 
 	@PostMapping("/api/user")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<UserDto> saveUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> saveUser(@RequestBody @Valid UserDto userDto) {
 		User user = userService.saveUser(DtoConverter.userFromDto(userDto));
 		return buildResponseEntity(DtoConverter.dtoFromUser(user));
 	}

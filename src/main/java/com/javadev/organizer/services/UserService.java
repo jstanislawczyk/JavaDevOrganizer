@@ -4,11 +4,12 @@ import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.javadev.organizer.entities.Role;
 import com.javadev.organizer.entities.User;
@@ -46,7 +47,7 @@ public class UserService {
 		return userRepository.findByRole(Role.valueOf(role));
 	}
 
-	public User saveUser(@RequestBody User user) throws NotUniqueException {
+	public User saveUser(@Valid User user) throws NotUniqueException {
 		if (isEmailUnique(user.getEmail())) {
 			setupUser(user);
 			userRepository.save(user);

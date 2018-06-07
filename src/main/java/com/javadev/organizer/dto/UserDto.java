@@ -24,22 +24,22 @@ public class UserDto implements Serializable{
 	@Getter
 	private Long id;
 
-	@Size(min = 2, max = 50, message = "First name must contain 2-50 characters")
+	@Size(min = 2, max = 50, message = "{firstName.message}")
 	@Getter
 	@Setter
 	private String firstName;
 
-	@Size(min = 2, max = 60, message = "Last name must contain 2-60 characters")
+	@Size(min = 2, max = 60, message = "{lastName.message}")
 	@Getter
 	@Setter
 	private String lastName;
 
-	@Email
+	@Email(message="{email.message}")
 	@Getter
 	@Setter
 	private String email;
 
-	@Size(min = 6, max = 60, message = "Password must contain 6-60 characters")
+	@Size(min = 6, max = 60, message = "{password.message}")
 	@Getter
 	@Setter
 	private char[] password;
